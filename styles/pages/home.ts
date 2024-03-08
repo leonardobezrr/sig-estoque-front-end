@@ -19,7 +19,7 @@ export const Heading = styled.h2`
     display: flex;
     line-height: 100%;
     margin: 0;
-    color: gray;
+    color: #FFF;
     font-size: 2.5rem;
 `
 
@@ -27,6 +27,7 @@ export const Text = styled.p`
     line-height: 160%;
     margin: 0;
     color: white;
+    font-weight: 400;
 `
 
 export const Preview = styled.div`
@@ -50,6 +51,11 @@ export const StartNowButton = styled.button`
     padding: 0.8em;
     font-weight: 100;
     font-size: 16px;
-    box-sizing: border-box;
-    background-color: green;
+    font-weight: 400;
+    background-color: #522d80;
+    opacity: .8;
+
+    &:hover {
+        opacity: 1;
+    }
 `;

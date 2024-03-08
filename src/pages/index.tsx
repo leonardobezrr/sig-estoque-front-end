@@ -1,4 +1,5 @@
 import { Heading, Hero, HomeContainer, Preview, StartNowButton, Text } from "@/styles/pages/home";
+import { FaArrowRight } from "react-icons/fa";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
 
         <StartNowButton>
           Começar agora
+          <FaArrowRight />
         </StartNowButton>
 
         </Hero>
