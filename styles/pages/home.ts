@@ -39,15 +39,16 @@ export const Preview = styled.div`
     }
 `;
 
-export const StartNowButton = styled.button`
+export const DefaultButton = styled.button`
     all: unset;
     display: flex;
-    margin-top: 1em;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
     align-items: center;
     justify-content: center;
     gap: 12px;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 8px;
     padding: 0.8em;
     font-weight: 100;
     font-size: 16px;

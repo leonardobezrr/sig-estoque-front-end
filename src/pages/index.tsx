@@ -1,5 +1,6 @@
-import { Heading, Hero, HomeContainer, Preview, StartNowButton, Text } from "@/styles/pages/home";
+import { Heading, Hero, HomeContainer, Preview, DefaultButton, Text } from "@/styles/pages/home";
 import { FaArrowRight } from "react-icons/fa";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -11,10 +12,10 @@ export default function Home() {
           Controle de estoque preciso, compras e vendas inteligentes.
         </Text>
 
-        <StartNowButton>
-          Começar agora
+        <DefaultButton>
+          <Link href="/components/login">Começar agora</Link>
           <FaArrowRight />
-        </StartNowButton>
+        </DefaultButton>
 
         </Hero>
 
