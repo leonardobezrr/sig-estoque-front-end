@@ -13,7 +13,7 @@ export default function Home() {
         </Text>
 
         <DefaultButton>
-          <Link href="/components/login">Começar agora</Link>
+          <Link href="/login">Começar agora</Link>
           <FaArrowRight />
         </DefaultButton>
 
