@@ -31,10 +31,6 @@ export default function Login() {
 
         </label>
           <DefaultButton>Login</DefaultButton>
-          <Text>
-            Não tem uma conta?
-            <LinkA>Cadastrar-se</LinkA>
-          </Text>
       </Form>
       <Overlay />
     </Container>
