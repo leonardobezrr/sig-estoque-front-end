@@ -2,8 +2,9 @@ import { DefaultButton } from "@/styles/pages/home";
 import { Container, Heading, Header, Form, StyledInput, Text, Overlay, Icon, LinkA } from "@/styles/pages/login";
 import { FaUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
-import Logo from "../../assets/Group1.svg"
+import Logo from "../../../assets/Group1.svg"
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Login() {
   return (
@@ -30,8 +31,10 @@ export default function Login() {
           </Icon>
 
         </label>
-          <DefaultButton>Login</DefaultButton>
-      </Form>
+          <DefaultButton>
+            <Link href="/components/manager/products">Login</Link>
+          </DefaultButton>
+        </Form>
       <Overlay />
     </Container>
   )
