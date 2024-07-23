@@ -2,7 +2,7 @@ import { DefaultButton } from "@/styles/pages/home";
 import { Container, Heading, Header, Form, StyledInput, Text, Overlay, Icon, LinkA } from "@/styles/pages/login";
 import { FaUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
-import Logo from "../../../assets/Group1.svg"
+import Logo from "../../assets/Group1.svg"
 import Image from "next/image";
 import Link from "next/link";
 
