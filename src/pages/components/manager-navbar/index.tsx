@@ -9,6 +9,7 @@ export default function ManagerNavbar() {
     "Usuários",
     "Administradores",
     "Funcionários",
+    "Fornecedores",
   ];
 
   return (
@@ -16,7 +17,6 @@ export default function ManagerNavbar() {
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="toggle-menu"
         />
         <NavbarBrand>
           <SSLogo />
@@ -32,10 +32,10 @@ export default function ManagerNavbar() {
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+          <NavbarMenuItem className="navbar-itens" key={`${item}-${index}`}>
             <Link
               color={
-                index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"
+                "foreground"
               }
               className="w-full"
               href="#"
