@@ -1,8 +1,8 @@
 const columns = [
-  {name: "NAME", uid: "name"},
-  {name: "EMAIL", uid: "email"},
-  {name: "ROLE", uid: "role"},
-  {name: "ACTIONS", uid: "actions"},
+  {name: "Nome", uid: "name"},
+  {name: "Email", uid: "email"},
+  {name: "Cargo", uid: "role"},
+  {name: "Ações", uid: "actions"},
 ];
 
 const users = [
