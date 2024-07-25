@@ -11,7 +11,7 @@ export default function ManagerNavbar() {
     { name: "Usuários", route: "/manager" },
     { name: "Administradores", route: "/administradores" },
     { name: "Funcionários", route: "/funcionarios" },
-    { name: "Fornecedores", route: "/fornecedores" },
+    { name: "Fornecedores", route: "/suppliers" },
   ];
 
   const handleMenuItemClick = (route: any) => {
