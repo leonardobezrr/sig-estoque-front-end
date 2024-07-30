@@ -53,6 +53,11 @@ export default function TableUsers() {
           placeholder="Pesquisar"
           className="w-1/3"
         />
+
+        <Button color="primary">
+          Venda
+        </Button>
+
         <Button color="primary">
           Adicionar
         </Button>
