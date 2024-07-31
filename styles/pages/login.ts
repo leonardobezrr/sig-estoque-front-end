@@ -17,6 +17,7 @@ export const Overlay = styled.div`
     background-color: #121214;
 `
 export const Heading = styled.h2`
+    margin-top: 1rem;
     font-size: 1.5rem;
     line-height: 160%;
 `
@@ -24,10 +25,16 @@ export const Heading = styled.h2`
 export const Header = styled.h3`
     color: #522d80;
 `
-export const Title = styled.p`
+export const Icon = styled.p`
     margin-top: 0.3rem;
+    display: flex;    
     margin-bottom: 0.3rem;
+    align-items: center;
     color: #fff;
+
+    & > svg {
+        margin-right: 0.5rem; 
+    } 
 `
 
 export const Text = styled.p`
@@ -59,4 +66,8 @@ export const StyledInput = styled.input`
     border: none;
     border-radius: 0.2rem;
     outline: none;
+
+    &:focus {
+        border: 1.5px solid #522d80;
+    }
 `

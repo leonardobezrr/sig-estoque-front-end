@@ -1,6 +1,8 @@
 import { Heading, Hero, HomeContainer, Preview, DefaultButton, Text } from "@/styles/pages/home";
 import { FaArrowRight } from "react-icons/fa";
 import Link from "next/link";
+import Image from "next/image";
+import Logo from "../assets/Group1.svg"
 
 export default function Home() {
   return (
@@ -20,7 +22,7 @@ export default function Home() {
         </Hero>
 
         <Preview>
-          anexar imagem....
+          <Image src={Logo} alt="Logo da aplicação" width={200} />
         </Preview>
       </HomeContainer>   
   )
