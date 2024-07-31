@@ -55,10 +55,6 @@ export default function TableUsers() {
         />
 
         <Button color="primary">
-          Venda
-        </Button>
-
-        <Button color="primary">
           Adicionar
         </Button>
       </div>
