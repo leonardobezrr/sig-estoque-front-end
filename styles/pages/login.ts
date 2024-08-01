@@ -51,7 +51,7 @@ export const LinkA = styled.a`
     text-decoration: underline;
 `
 
-export const Form = styled.div`
+export const Form = styled.form`
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
@@ -70,4 +70,10 @@ export const StyledInput = styled.input`
     &:focus {
         border: 1.5px solid #522d80;
     }
+`
+
+export const SignUpLink = styled.a`
+    background-color: red;
+    font-size: 20em;
+    color: #fff;
 `

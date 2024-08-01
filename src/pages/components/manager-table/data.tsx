@@ -1,11 +1,12 @@
-const columns = [
+// Define the columns and users arrays
+export const columns = [
   {name: "Nome", uid: "name"},
   {name: "Email", uid: "email"},
   {name: "Cargo", uid: "role"},
   {name: "Ações", uid: "actions"},
 ];
 
-const users = [
+export const users = [
   {
     id: 1,
     name: "Tony Reichert",
@@ -38,4 +39,3 @@ const users = [
   },
 ];
 
-export {columns, users};
