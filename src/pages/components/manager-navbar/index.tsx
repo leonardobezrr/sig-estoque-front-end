@@ -22,14 +22,14 @@ export default function ManagerNavbar() {
     <Navbar onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} className="cursor-pointer" />
-        <NavbarBrand>
+        <NavbarBrand aria-label="Logo da empresa">
           <SSLogo />
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button as={Link} color="danger" href="#" variant="flat">
+          <Button as={Link} color="danger" href="#" variant="flat" aria-label="Sair">
             Sair
           </Button>
         </NavbarItem>
@@ -43,6 +43,7 @@ export default function ManagerNavbar() {
               className="w-full cursor-pointer"
               size="lg"
               onClick={() => handleMenuItemClick(item.route)}
+              aria-label={`Navegar para ${item.name}`}
             >
               {item.name}
             </Link>

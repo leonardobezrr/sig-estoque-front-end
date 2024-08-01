@@ -30,12 +30,19 @@ export default function TableUsers() {
         return (
           <div className="flex justify-center items-center gap-2">
             <Tooltip content="Edit user">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+              <span
+                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                aria-label="Editar usuário"
+              >
                 <EditIcon />
               </span>
             </Tooltip>
+
             <Tooltip color="danger" content="Delete user">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
+              <span
+                className="text-lg text-danger cursor-pointer active:opacity-50"
+                aria-label="Excluir usuário"
+              >
                 <DeleteIcon />
               </span>
             </Tooltip>
@@ -50,11 +57,12 @@ export default function TableUsers() {
     <div className="w-full">
       <div className="flex justify-between items-center mb-5">
         <Input
+          aria-label="Pesquisar"
           placeholder="Pesquisar"
           className="w-1/3"
         />
 
-        <Button color="primary">
+        <Button color="primary" aria-label="Adicionar novo usuário">
           Adicionar
         </Button>
       </div>

@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Roboto } from 'next/font/google'
+import { AuthProvider } from "../context/AuthContext";
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -9,8 +10,10 @@ const roboto = Roboto({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
+    <AuthProvider>
       <main className={roboto.className}>
-        <Component {...pageProps} /> 
+        <Component {...pageProps} />
       </main>
+    </AuthProvider>
   )
 }
