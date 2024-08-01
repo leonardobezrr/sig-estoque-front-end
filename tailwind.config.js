@@ -12,19 +12,4 @@ module.exports = {
     extend: {},
   },
   darkMode: "",
-  plugins: [nextui(
-    {
-      ariaLabel: "NextUI Layout", // Not a valid config key for layout
-      defaultTheme: "dark", // default theme from the themes object
-      defaultExtendTheme: "dark",
-      themes: {
-        light: {
-          primary: "#00FF00",
-        },
-        extend: {colors: {
-          primary: "#00FF00",
-        }},
-      },
-    }
-  )],
 }
