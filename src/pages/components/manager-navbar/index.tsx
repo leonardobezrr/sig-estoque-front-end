@@ -1,7 +1,7 @@
 import React from "react";
 import { useRouter } from 'next/router';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button } from "@nextui-org/react";
-import { SSLogo } from './SSLogo';
+import SSLogo  from './SSLogo';
 
 export default function ManagerNavbar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);

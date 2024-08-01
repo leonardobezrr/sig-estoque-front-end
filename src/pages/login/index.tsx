@@ -4,10 +4,9 @@ import { FaUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import Logo from "../../assets/Group1.svg";
 import Image from "next/image";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/src/context/AuthContext";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useRouter } from "next/router";
 
 interface User {
   email: string;
@@ -15,16 +14,19 @@ interface User {
 }
 
 export default function Login() {
-  const router = useRouter();
   const { signIn } = useContext(AuthContext);
-  const { register, handleSubmit } = useForm<User>();
+  const { register, handleSubmit, formState: { errors } } = useForm<User>();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit: SubmitHandler<User> = async (data) => {
+    setLoading(true);
     try {
-      await signIn(data);
+      signIn(data);
       console.log(data);
     } catch (error) {
       console.error("Falha no login:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,9 +49,10 @@ export default function Login() {
               type="email"
               placeholder="Email"
               aria-label="Email"
-              {...register("email", { required: true })}
+              {...register("email", { required: "Email é obrigatório" })}
             />
           </Icon>
+          {errors.email && <Text>{errors.email.message}</Text>}
 
           <Icon>
             <RiLockPasswordFill size={24} aria-hidden="true" />
@@ -57,12 +60,13 @@ export default function Login() {
               type="password"
               placeholder="Senha"
               aria-label="Senha"
-              {...register("password", { required: true })}
+              {...register("password", { required: "Senha é obrigatória" })}
             />
           </Icon>
+          {errors.password && <Text>{errors.password.message}</Text>}
         </label>
-        <DefaultButton type="submit" aria-label="Login">
-          Login
+        <DefaultButton type="submit" aria-label="Login" disabled={loading}>
+          {loading ? "Carregando..." : "Login"}
         </DefaultButton>
       </Form>
       <Overlay />

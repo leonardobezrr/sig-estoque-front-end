@@ -1,11 +1,9 @@
 import React from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Tooltip } from "@nextui-org/react";
-import { EditIcon } from "./edit";
-import { DeleteIcon } from "./delete";
-import { columns, users } from "./data";
+import EditIcon  from "./edit";
+import DeleteIcon  from "./delete";
+import { columns, users } from "./data"
 import { Input, Button } from "@nextui-org/react";
-import { IoSearch } from "react-icons/io5";
-
 
 type User = typeof users[0];
 
@@ -57,12 +55,12 @@ export default function TableUsers() {
     <div className="w-full">
       <div className="flex justify-between items-center mb-5">
         <Input
-          aria-label="Pesquisar"
+          aria-labelledby="Pesquisar"
           placeholder="Pesquisar"
           className="w-1/3"
         />
 
-        <Button color="primary" aria-label="Adicionar novo usuário">
+        <Button color="primary" aria-labelledby="Adicionar novo usuário">
           Adicionar
         </Button>
       </div>

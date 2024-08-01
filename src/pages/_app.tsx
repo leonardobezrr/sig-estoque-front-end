@@ -8,6 +8,8 @@ const roboto = Roboto({
   subsets: ['latin'],
 })
 
+console.warn = function() {};
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
