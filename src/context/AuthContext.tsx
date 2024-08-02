@@ -33,7 +33,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const { userId, token } = JSON.parse(loggedInUser);
       setUser(userId);
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
-      router.push("/manager");
     } else {
       setUser("");
     }
@@ -55,7 +54,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
           api.defaults.headers["Authorization"] = `Bearer ${token}`;
           setUser(userId);
-
           router.push("/manager");
         } catch (err) {
           setUser("");
