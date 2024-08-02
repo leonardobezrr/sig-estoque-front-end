@@ -1,86 +1,152 @@
-import React from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Tooltip } from "@nextui-org/react";
-import EditIcon  from "./edit";
-import DeleteIcon  from "./delete";
-import { columns, users } from "./data"
-import { Input, Button } from "@nextui-org/react";
-
-type User = typeof users[0];
-
 export default function TableUsers() {
-  const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
-    const cellValue = user[columnKey as keyof User];
-
-    switch (columnKey) {
-      case "name":
-        return (
-          <User description={user.email} name={cellValue}>
-            {user.email}
-          </User>
-        );
-      case "role":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+  return(
+    <div className="overflow-x-auto flex w-full" style={{ backgroundColor: '#1d232e', padding: '2rem', border: '1px solid #8888', borderRadius: '8px' }}>
+   <table className="table">
+    {/* head */}
+    <thead>
+      <tr>
+        <th>
+          <label>
+            <input type="checkbox" className="checkbox" />
+          </label>
+        </th>
+        <th>Name</th>
+        <th>E-mail</th>
+        <th>Tipo</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {/* row 1 */}
+      <tr>
+        <th>
+          <label>
+            <input type="checkbox" className="checkbox" />
+          </label>
+        </th>
+        <td>
+          <div className="flex items-center gap-3">
+            <div className="avatar">
+              <div className="mask mask-squircle h-12 w-12">
+                <img
+                  src="https://www.pngall.com/wp-content/uploads/5/Profile-PNG-File.png"
+                  alt="Avatar Tailwind CSS Component" />
+              </div>
+            </div>
+            <div>
+              <div className="font-bold">Hart Hagerty</div>
+              <div className="text-sm opacity-50">United States</div>
+            </div>
           </div>
-        );
-      case "actions":
-        return (
-          <div className="flex justify-center items-center gap-2">
-            <Tooltip content="Edit user">
-              <span
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                aria-label="Editar usuário"
-              >
-                <EditIcon />
-              </span>
-            </Tooltip>
-
-            <Tooltip color="danger" content="Delete user">
-              <span
-                className="text-lg text-danger cursor-pointer active:opacity-50"
-                aria-label="Excluir usuário"
-              >
-                <DeleteIcon />
-              </span>
-            </Tooltip>
+        </td>
+        <td>
+          Zemlak, Daniel and Leannon
+          <br />
+          <span className="badge badge-ghost badge-sm">Desktop Support Technician</span>
+        </td>
+        <td>Purple</td>
+        <th>
+          <button className="btn btn-ghost btn-xs">details</button>
+        </th>
+      </tr>
+      {/* row 2 */}
+      <tr>
+        <th>
+          <label>
+            <input type="checkbox" className="checkbox" />
+          </label>
+        </th>
+        <td>
+          <div className="flex items-center gap-3">
+            <div className="avatar">
+              <div className="mask mask-squircle h-12 w-12">
+                <img
+                  src="https://www.pngall.com/wp-content/uploads/5/Profile-PNG-File.png"
+                  alt="Avatar Tailwind CSS Component" />
+              </div>
+            </div>
+            <div>
+              <div className="font-bold">Brice Swyre</div>
+              <div className="text-sm opacity-50">China</div>
+            </div>
           </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
-
-  return (
-    <div className="w-full">
-      <div className="flex justify-between items-center mb-5">
-        <Input
-          aria-labelledby="Pesquisar"
-          placeholder="Pesquisar"
-          className="w-1/3"
-        />
-
-        <Button color="primary" aria-labelledby="Adicionar novo usuário">
-          Adicionar
-        </Button>
-      </div>
-
-      <Table>
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody items={users}>
-          {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-  );
+        </td>
+        <td>
+          Carroll Group
+          <br />
+          <span className="badge badge-ghost badge-sm">Tax Accountant</span>
+        </td>
+        <td>Red</td>
+        <th>
+          <button className="btn btn-ghost btn-xs">details</button>
+        </th>
+      </tr>
+      {/* row 3 */}
+      <tr>
+        <th>
+          <label>
+            <input type="checkbox" className="checkbox" />
+          </label>
+        </th>
+        <td>
+          <div className="flex items-center gap-3">
+            <div className="avatar">
+              <div className="mask mask-squircle h-12 w-12">
+                <img
+                  src="https://www.pngall.com/wp-content/uploads/5/Profile-PNG-File.png"
+                  alt="Avatar Tailwind CSS Component" />
+              </div>
+            </div>
+            <div>
+              <div className="font-bold">Marjy Ferencz</div>
+              <div className="text-sm opacity-50">Russia</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          Rowe-Schoen
+          <br />
+          <span className="badge badge-ghost badge-sm">Office Assistant I</span>
+        </td>
+        <td>Crimson</td>
+        <th>
+          <button className="btn btn-ghost btn-xs">details</button>
+        </th>
+      </tr>
+      {/* row 4 */}
+      <tr>
+        <th>
+          <label>
+            <input type="checkbox" className="checkbox" />
+          </label>
+        </th>
+        <td>
+          <div className="flex items-center gap-3">
+            <div className="avatar">
+              <div className="mask mask-squircle h-12 w-12">
+                <img
+                  src="https://www.pngall.com/wp-content/uploads/5/Profile-PNG-File.png"
+                  alt="Avatar Tailwind CSS Component" />
+              </div>
+            </div>
+            <div>
+              <div className="font-bold">Yancy Tear</div>
+              <div className="text-sm opacity-50">Brazil</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          Wyman-Ledner
+          <br />
+          <span className="badge badge-ghost badge-sm">Community Outreach Specialist</span>
+        </td>
+        <td>Indigo</td>
+        <th>
+          <button className="btn btn-ghost btn-xs">details</button>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  )
 }
