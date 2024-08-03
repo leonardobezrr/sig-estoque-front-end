@@ -9,9 +9,7 @@ export default function Suppliers() {
     <Container>
       <ManagerNavbar />
       <TableUsers />
-      <Header style={{ marginTop: "2rem", fontSize: "1.5rem" }}>
-        Fornece
-      </Header>
+      <Header style={{ marginTop: "2rem", fontSize: "1.5rem" }}>Fornece</Header>
     </Container>
   );
 }

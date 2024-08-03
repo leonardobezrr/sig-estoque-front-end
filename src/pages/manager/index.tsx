@@ -1,17 +1,31 @@
+// ManagerUsers.tsx
 import React from "react";
 import ManagerNavbar from "../components/manager-navbar";
 import TableUsers from "../components/manager-table";
-import { Container } from "@/styles/pages/manager";
-import { Header } from "@/styles/pages/login";
+import { AddUserButton, Container } from "@/styles/pages/manager";
+import { DefaultButton } from "@/styles/pages/home";
+import { useModal, ModalProvider } from '../components/create-user-modal/modal-context';
+import CreateUserModal from '../components/create-user-modal/index';
 
-export default function ManagerUsers() {
+const ManagerUsers: React.FC = () => {
+  const { openModal } = useModal();
+
   return (
     <Container>
       <ManagerNavbar />
+      <AddUserButton>
+        <DefaultButton onClick={openModal}>Adicionar Usuário</DefaultButton>
+      </AddUserButton>
       <TableUsers />
-      <Header style={{ marginTop: "2rem", fontSize: "1.5rem" }}>
-        Usuários
-      </Header>
-    </Container >
+      <CreateUserModal />
+    </Container>
+  );
+};
+
+export default function ManagerUsersWithProvider() {
+  return (
+    <ModalProvider>
+      <ManagerUsers />
+    </ModalProvider>
   );
 }
