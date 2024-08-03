@@ -9,7 +9,7 @@ interface SignInCredentials {
 }
 
 type AuthContextData = {
-  signIn(credentials: SignInCredentials): void;
+  signIn(credentials: SignInCredentials): Promise<void>;
   user: string;
   isAuthenticated: boolean;
   signOut: () => void;
@@ -23,10 +23,6 @@ export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState("");
-  const [credentials, setCredentials] = useState<SignInCredentials | null>(
-    null,
-  );
-  const isAuthenticated = !!user;
   const router = useRouter();
 
   useEffect(() => {
@@ -40,51 +36,39 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [router]);
 
-  useEffect(() => {
-    if (credentials) {
-      const signIn = async () => {
-        try {
-          const response = await api.post("login", credentials);
-          const { token, userId } = response.data;
-          console.log(userId);
+  const signIn = async (credentials: SignInCredentials) => {
+    try {
+      const response = await api.post("login", credentials);
+      const { token, userId } = response.data;
+      console.log(userId);
 
-          localStorage.setItem("@ss-user", JSON.stringify({ userId, token }));
-          setCookie(undefined, "ssAuth.token", token, {
-            maxAge: 60 * 60 * 24 * 30,
-            path: "/",
-          });
+      localStorage.setItem("@ss-user", JSON.stringify({ userId, token }));
+      setCookie(undefined, "ssAuth.token", token, {
+        maxAge: 60 * 60 * 24 * 30,
+        path: "/",
+      });
 
-          api.defaults.headers["Authorization"] = `Bearer ${token}`;
-          setUser(userId);
-          router.push("/manager");
-        } catch (err) {
-          setUser("");
-          console.error(err);
-        } finally {
-          setCredentials(null);
-        }
-      };
-
-      signIn();
+      api.defaults.headers["Authorization"] = `Bearer ${token}`;
+      setUser(userId);
+      router.push("/manager");
+    } catch (err) {
+      setUser("");
+      console.error(err);
     }
-  }, [credentials, router]);
+  };
 
-  function signIn(credentials: SignInCredentials) {
-    setCredentials(credentials);
-  }
-
-  function signOut() {
+  const signOut = () => {
     destroyCookie(undefined, "ssAuth.token");
     localStorage.removeItem("@ss-user");
     setUser("");
     router.push("/");
-  }
+  };
 
   return (
     <AuthContext.Provider
       value={{
         signIn,
-        isAuthenticated,
+        isAuthenticated: !!user,
         user,
         signOut,
       }}

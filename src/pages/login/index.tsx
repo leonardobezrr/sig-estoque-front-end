@@ -16,6 +16,7 @@ import Image from "next/image";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/src/context/AuthContext";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { Box, CircularProgress } from "@mui/material";
 
 interface User {
   email: string;
@@ -34,7 +35,7 @@ export default function Login() {
   const onSubmit: SubmitHandler<User> = async (data) => {
     setLoading(true);
     try {
-      signIn(data);
+      await signIn(data);
       console.log(data);
     } catch (error) {
       console.error("Falha no login:", error);
@@ -75,7 +76,12 @@ export default function Login() {
           {errors.password && <Text>{errors.password.message}</Text>}
         </label>
         <DefaultButton type="submit" aria-label="Login" disabled={loading}>
-          {loading ? "Carregando..." : "Login"}
+          {loading ?
+          <Box sx={{ display: 'flex' }}>
+            setTime
+            <CircularProgress />
+          </Box>
+          : "Login"}
         </DefaultButton>
       </Form>
       <Overlay />
