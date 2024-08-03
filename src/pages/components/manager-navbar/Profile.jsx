@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const ProfileIcon = (props) => (
   <svg
@@ -10,9 +10,7 @@ const ProfileIcon = (props) => (
     height="50"
     {...props}
   >
-    <path
-      d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.87 0-7 3.13-7 7v1h14v-1c0-3.87-3.13-7-7-7z"
-    />
+    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.87 0-7 3.13-7 7v1h14v-1c0-3.87-3.13-7-7-7z" />
   </svg>
 );
 

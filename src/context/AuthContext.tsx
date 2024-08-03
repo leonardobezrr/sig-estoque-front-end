@@ -13,7 +13,7 @@ type AuthContextData = {
   user: string;
   isAuthenticated: boolean;
   signOut: () => void;
-}
+};
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -23,7 +23,9 @@ export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState("");
-  const [credentials, setCredentials] = useState<SignInCredentials | null>(null);
+  const [credentials, setCredentials] = useState<SignInCredentials | null>(
+    null,
+  );
   const isAuthenticated = !!user;
   const router = useRouter();
 
@@ -42,7 +44,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (credentials) {
       const signIn = async () => {
         try {
-          const response = await api.post('login', credentials);
+          const response = await api.post("login", credentials);
           const { token, userId } = response.data;
           console.log(userId);
 

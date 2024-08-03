@@ -7,11 +7,11 @@ import { DefaultButton } from "@/styles/pages/home";
 export default function ManagerUsers() {
   return (
     <Container>
-      <ManagerNavbar  />
+      <ManagerNavbar />
       <AddUserButton>
         <DefaultButton>Adicionar Usuário</DefaultButton>
       </AddUserButton>
       <TableUsers />
-    </Container >
+    </Container>
   );
 }

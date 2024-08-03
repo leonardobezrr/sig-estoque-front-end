@@ -1,5 +1,14 @@
 import { DefaultButton } from "@/styles/pages/home";
-import { Container, Heading, Header, Form, StyledInput, Text, Overlay, Icon } from "@/styles/pages/login";
+import {
+  Container,
+  Heading,
+  Header,
+  Form,
+  StyledInput,
+  Text,
+  Overlay,
+  Icon,
+} from "@/styles/pages/login";
 import { FaUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import Logo from "../../assets/Group1.svg";
@@ -15,7 +24,11 @@ interface User {
 
 export default function Login() {
   const { signIn } = useContext(AuthContext);
-  const { register, handleSubmit, formState: { errors } } = useForm<User>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<User>();
   const [loading, setLoading] = useState(false);
 
   const onSubmit: SubmitHandler<User> = async (data) => {
@@ -33,13 +46,9 @@ export default function Login() {
   return (
     <Container>
       <Image src={Logo} alt="Logo da aplicação" width={100} />
-      <Heading>
-        SIGEstoque, realize seu login ou cadastre-se.
-      </Heading>
+      <Heading>SIGEstoque, realize seu login ou cadastre-se.</Heading>
 
-      <Header>
-        Informe seus dados para acessar!
-      </Header>
+      <Header>Informe seus dados para acessar!</Header>
 
       <Form onSubmit={handleSubmit(onSubmit)}>
         <label>
