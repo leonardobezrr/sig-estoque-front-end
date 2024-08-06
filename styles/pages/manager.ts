@@ -35,6 +35,20 @@ export const StyledInput = styled.input`
   }
 `;
 
+export const StyledInputUpdateUser = styled.input`
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.2rem;
+  outline: none;
+
+  &:focus {
+    border: 1.5px solid #522d80;
+  }
+`;
+
 export const Icon = styled.p`
   margin-top: 0.3rem;
   display: flex;
