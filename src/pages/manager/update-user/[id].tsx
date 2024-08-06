@@ -83,21 +83,22 @@ function UpdateUser() {
               <FaUser size={24} aria-hidden="true" />
               <StyledInputUpdateUser
                 type="text"
-                value={userData.name}
                 placeholder="Nome"
                 aria-label="Nome"
                 {...register("name", { required: "Nome é obrigatório" })}
+                defaultValue={userData.name} // Inicializa o valor com o dado do estado
               />
             </Icon>
             {errors.name && <Text>{errors.name.message}</Text>}
+
             <Icon>
               <FaUser size={24} aria-hidden="true" />
               <StyledInputUpdateUser
                 type="email"
-                value={userData.email}
                 placeholder="Email"
                 aria-label="Email"
                 {...register("email", { required: "Email é obrigatório" })}
+                defaultValue={userData.email} // Inicializa o valor com o dado do estado
               />
             </Icon>
             {errors.email && <Text>{errors.email.message}</Text>}

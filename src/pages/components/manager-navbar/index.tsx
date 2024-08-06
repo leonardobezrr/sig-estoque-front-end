@@ -2,6 +2,7 @@ import { useContext } from "react";
 import SSLogo from "./SSLogo";
 import ProfileIcon from "./Profile";
 import { AuthContext } from "@/src/context/AuthContext";
+import Link from "next/link";
 
 export default function ManagerNavbar() {
   const { signOut } = useContext(AuthContext);
@@ -20,9 +21,9 @@ export default function ManagerNavbar() {
       style={{ paddingBottom: "4rem !important" }}
     >
       <div className="flex-1">
-        <a href="/manager" className="btn btn-ghost text-xl">
+        <Link href="/manager" className="btn btn-ghost text-xl">
           <SSLogo />
-        </a>
+        </Link>
       </div>
       <div className="flex-none gap-2 flex items-center">
         <div className="form-control">
@@ -40,12 +41,6 @@ export default function ManagerNavbar() {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            <li>
-              <a className="justify-between">Profile</a>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
             <li>
               <button
                 onClick={handleSignout}
