@@ -23,7 +23,8 @@ function UpdateUser() {
 
   useEffect(() => {
     getUserProfile();
-  }); // Adicione `userId` como dependência para evitar loops infinitos
+  });
+  oi;
 
   return (
     <Container>
