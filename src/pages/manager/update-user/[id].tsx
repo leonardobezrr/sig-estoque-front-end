@@ -4,17 +4,22 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { fetchUserData } from "./api";
 
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+}
+
 function UpdateUser() {
   const router = useRouter();
   const { id } = router.query;
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const getUserProfile = async () => {
     try {
       if (typeof id === "string") {
         const response = await fetchUserData(id);
-        console.log(response);
-        setUserData(response.data);
+        setUserData(response.user);
       }
     } catch (error) {
       console.log("Não foi possível encontrar o colaborador");
@@ -22,19 +27,26 @@ function UpdateUser() {
   };
 
   useEffect(() => {
-    getUserProfile();
-  });
-  oi;
+    if (id) {
+      getUserProfile();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    console.log("User data state updated:", userData);
+  }, [userData]);
 
   return (
     <Container>
       <ManagerNavbar />
-      {`id do usuario ${id}`}
-      {userData && (
+      {userData ? (
         <div>
-          <h1>olar</h1>
-          {/* Adicione mais campos conforme necessário */}
+          <p>ID do usuário: {userData.id}</p>
+          <p>Nome: {userData.name}</p>
+          <p>Email: {userData.email}</p>
         </div>
+      ) : (
+        <p>Carregando...</p>
       )}
     </Container>
   );
