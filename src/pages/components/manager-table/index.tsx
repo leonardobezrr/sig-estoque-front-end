@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { useRouter } from "next/router";
 
 export interface Users {
   id: string;
@@ -27,6 +28,7 @@ const modalStyle = {
 };
 
 export default function TableUsers() {
+  const router = useRouter();
   const [users, setUsers] = useState<Users[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -66,6 +68,10 @@ export default function TableUsers() {
   const handleClose = () => {
     setOpen(false);
     setSelectedUserId(null);
+  };
+
+  const handleEditUser = (id: string) => {
+    router.push(`/manager/update-user/${id}`);
   };
 
   return (
@@ -128,7 +134,7 @@ export default function TableUsers() {
               <td className="text-center">
                 <div className="flex justify-center space-x-2">
                   <button className="btn btn-ghost btn-xs">
-                    <MdEdit size={17} />
+                    <MdEdit size={17} onClick={() => handleEditUser(user.id)} />
                   </button>
                   <button
                     onClick={() => handleOpen(user.id)}
