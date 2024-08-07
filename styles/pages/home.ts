@@ -50,9 +50,7 @@ export const DefaultButton = styled.button`
   cursor: pointer;
   border-radius: 8px;
   padding: 0.8em;
-  font-weight: 100;
   font-size: 16px;
-  font-weight: 400;
   background-color: #522d80;
   opacity: 0.8;
 

@@ -1,13 +1,28 @@
 import { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { MdDeleteOutline, MdEdit } from "react-icons/md";
-import { deleteUser, fetchUsersData } from "./api";
+import {
+  fetchUserData,
+  updateEmployeeUser,
+  updateManagerUser,
+} from "../../manager/update-user/api/index";
+import { deleteUser, fetchUsersData } from "./api/index";
 import Image from "next/image";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { useRouter } from "next/router";
+import { useForm, SubmitHandler } from "react-hook-form";
+import {
+  DefaultButton,
+  Form,
+  Icon,
+  Text,
+  StyledInputUpdateUser,
+} from "@/styles/pages/manager";
+import { FaUser } from "react-icons/fa";
+import { RiLockPasswordFill } from "react-icons/ri";
+import { CircularProgress } from "@mui/material";
 
 export interface Users {
   id: string;
@@ -27,11 +42,21 @@ const modalStyle = {
   p: 4,
 };
 
+interface UserData {
+  userId: string;
+  name: string;
+  email: string;
+  password?: string;
+  role: string;
+}
+
 export default function TableUsers() {
-  const router = useRouter();
   const [users, setUsers] = useState<Users[]>([]);
-  const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchAllUsers = async () => {
     try {
@@ -60,18 +85,60 @@ export default function TableUsers() {
     }
   };
 
-  const handleOpen = (id: string) => {
+  const handleOpenDelete = (id: string) => {
     setSelectedUserId(id);
-    setOpen(true);
+    setOpenDelete(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenDelete(false);
     setSelectedUserId(null);
   };
 
-  const handleEditUser = (id: string) => {
-    router.push(`/manager/update-user/${id}`);
+  const handleOpenEdit = async (id: string) => {
+    setSelectedUserId(id);
+    try {
+      const response = await fetchUserData(id);
+      setUserData(response.user);
+      setOpenEdit(true);
+    } catch (error) {
+      console.error("Erro ao abrir modal de edição:", error);
+    }
+  };
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+    setSelectedUserId(null);
+    setUserData(null);
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserData>();
+
+  const onSubmit: SubmitHandler<UserData> = async (data) => {
+    setLoading(true);
+    try {
+      if (selectedUserId && userData) {
+        const formattedData = { ...data, userId: selectedUserId };
+
+        if (userData.role === "MANAGER") {
+          await updateManagerUser(selectedUserId, formattedData);
+        } else if (userData.role === "EMPLOYEE") {
+          await updateEmployeeUser(selectedUserId, formattedData);
+        }
+        fetchAllUsers();
+        handleCloseEdit();
+      } else {
+        console.error("ID inválido ou dados do usuário ausentes");
+      }
+    } catch (error) {
+      console.error("Erro ao editar o usuário:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -133,11 +200,14 @@ export default function TableUsers() {
               </td>
               <td className="text-center">
                 <div className="flex justify-center space-x-2">
-                  <button className="btn btn-ghost btn-xs">
-                    <MdEdit size={17} onClick={() => handleEditUser(user.id)} />
+                  <button
+                    className="btn btn-ghost btn-xs"
+                    onClick={() => handleOpenEdit(user.id)}
+                  >
+                    <MdEdit size={17} />
                   </button>
                   <button
-                    onClick={() => handleOpen(user.id)}
+                    onClick={() => handleOpenDelete(user.id)}
                     className="btn btn-ghost btn-xs"
                   >
                     <MdDeleteOutline size={17} color="red" />
@@ -149,9 +219,8 @@ export default function TableUsers() {
         </tbody>
       </table>
 
-      {/* Modal */}
       <Modal
-        open={open}
+        open={openDelete}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -182,6 +251,59 @@ export default function TableUsers() {
           </div>
         </Box>
       </Modal>
+
+      {userData && (
+        <Modal
+          open={openEdit}
+          onClose={handleCloseEdit}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={modalStyle}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Editar Usuário
+            </Typography>
+            <Form onSubmit={handleSubmit(onSubmit)}>
+              <Icon>
+                <FaUser size={24} aria-hidden="true" />
+                <StyledInputUpdateUser
+                  type="text"
+                  placeholder="Nome"
+                  aria-label="Nome"
+                  {...register("name", { required: "Nome é obrigatório" })}
+                  defaultValue={userData.name}
+                />
+              </Icon>
+              {errors.name && <Text>{errors.name.message}</Text>}
+
+              <Icon>
+                <FaUser size={24} aria-hidden="true" />
+                <StyledInputUpdateUser
+                  type="email"
+                  placeholder="Email"
+                  aria-label="Email"
+                  {...register("email", { required: "Email é obrigatório" })}
+                  defaultValue={userData.email}
+                />
+              </Icon>
+              {errors.email && <Text>{errors.email.message}</Text>}
+              <DefaultButton
+                type="submit"
+                aria-label="Salvar"
+                disabled={loading}
+              >
+                {loading ? (
+                  <Box sx={{ display: "flex" }}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  "Salvar"
+                )}
+              </DefaultButton>
+            </Form>
+          </Box>
+        </Modal>
+      )}
     </div>
   );
 }
