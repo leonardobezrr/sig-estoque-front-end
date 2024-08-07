@@ -32,8 +32,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const loggedInUser = localStorage.getItem("@ss-user");
     if (loggedInUser) {
-      const { userId, token } = JSON.parse(loggedInUser);
-      setUser(userId);
+      const { id, token } = JSON.parse(loggedInUser);
+      setUser(id);
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
     } else {
       setUser("");
@@ -45,17 +45,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const signIn = async () => {
         try {
           const response = await api.post("login", credentials);
-          const { token, userId } = response.data;
-          console.log(userId);
+          const { token, id } = response.data;
+          console.log(id);
 
-          localStorage.setItem("@ss-user", JSON.stringify({ userId, token }));
+          localStorage.setItem("@ss-user", JSON.stringify({ id, token }));
           setCookie(undefined, "ssAuth.token", token, {
             maxAge: 60 * 60 * 24 * 30,
             path: "/",
           });
 
           api.defaults.headers["Authorization"] = `Bearer ${token}`;
-          setUser(userId);
+          setUser(id);
           router.push("/manager");
         } catch (err) {
           setUser("");

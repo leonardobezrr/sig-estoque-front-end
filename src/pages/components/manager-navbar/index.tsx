@@ -1,11 +1,37 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import SSLogo from "./SSLogo";
 import ProfileIcon from "./Profile";
 import { AuthContext } from "@/src/context/AuthContext";
 import Link from "next/link";
+import { fetchUserData } from "./api";
+
+interface UserData {
+  userId: string;
+  name: string;
+  email: string;
+  password?: string;
+  role: string;
+}
+
 
 export default function ManagerNavbar() {
-  const { signOut } = useContext(AuthContext);
+  const { user, signOut } = useContext(AuthContext);
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  const getUserProfile = async () => {
+    try {
+      if (typeof user === "string") {
+        const response = await fetchUserData(user);
+        setUserData(response.user);
+      }
+    } catch (error) {
+      console.log("Não foi possível encontrar o colaborador");
+    }
+  };
+
+  useEffect(() => {
+    getUserProfile();
+  }, [user])
 
   function handleSignout() {
     try {
@@ -27,7 +53,7 @@ export default function ManagerNavbar() {
       </div>
       <div className="flex-none gap-2 flex items-center">
         <div className="form-control">
-          <span>Ricardo</span>
+          <span>{user ? userData?.name : "Usuário"}</span>
         </div>
         <div className="dropdown dropdown-end">
           <div
