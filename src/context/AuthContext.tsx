@@ -45,8 +45,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const signIn = async () => {
         try {
           const response = await api.post("login", credentials);
-          const { token, id } = response.data;
-          console.log(id);
+          const { token, id, role } = response.data;
 
           localStorage.setItem("@ss-user", JSON.stringify({ id, token }));
           setCookie(undefined, "ssAuth.token", token, {
@@ -56,7 +55,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
           api.defaults.headers["Authorization"] = `Bearer ${token}`;
           setUser(id);
-          router.push("/manager");
+          if (role === "MANAGER") {
+            router.push("/manager");
+          } else if (role === "EMPLOYEE") {
+            router.push("/employee");
+          }
         } catch (err) {
           setUser("");
           console.error(err);

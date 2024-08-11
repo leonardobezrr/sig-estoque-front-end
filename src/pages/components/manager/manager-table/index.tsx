@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { MdDeleteOutline, MdEdit } from "react-icons/md";
-// import {
-//   fetchUserData,
-//   updateEmployeeUser,
-//   updateManagerUser,
-// } from "../../manager/update-user/api/index";
-import { fetchAllProductsData } from "./api/index";
+
+import { deleteUser, fetchUsersData } from "./api/index";
 import Image from "next/image";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-// import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import {
   DefaultButton,
   Form,
@@ -22,14 +18,15 @@ import {
 } from "@/styles/pages/manager";
 import { FaUser } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
+import { fetchUserData } from "../manager-navbar/api";
+import { updateEmployeeUser, updateManagerUser } from "@/src/pages/manager/update-user/api";
 
-export interface Product {
+export interface Users {
   id: string;
   name: string;
-  description: string;
-  price: number;
-  quantity_in_stock: number;
-  batch: string;
+  email: string;
+  role: string;
+  avatar?: string;
 }
 
 const modalStyle = {
@@ -42,27 +39,27 @@ const modalStyle = {
   p: 4,
 };
 
-// interface UserData {
-//   userId: string;
-//   name: string;
-//   email: string;
-//   password?: string;
-//   role: string;
-// }
+interface UserData {
+  userId: string;
+  name: string;
+  email: string;
+  password?: string;
+  role: string;
+}
 
-export default function TableProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
-  // const [openDelete, setOpenDelete] = useState(false);
-  // const [openEdit, setOpenEdit] = useState(false);
-  // const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  // const [userData, setUserData] = useState<UserData | null>(null);
-  // const [loading, setLoading] = useState(false);
+export default function TableUsers() {
+  const [users, setUsers] = useState<Users[]>([]);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const fetchAllProducts = async () => {
+  const fetchAllUsers = async () => {
     try {
-      const response = await fetchAllProductsData();
-      if (response.products.length > 0) {
-        setProducts(response.products);
+      const response = await fetchUsersData();
+      if (response.users.length > 0) {
+        setUsers(response.users);
       }
     } catch (error) {
       console.log("Erro na requisição", error);
@@ -70,76 +67,76 @@ export default function TableProducts() {
   };
 
   useEffect(() => {
-    fetchAllProducts();
+    fetchAllUsers();
   }, []);
 
-  // const handleDeleteUser = async () => {
-  //   if (selectedUserId) {
-  //     try {
-  //       await deleteUser(selectedUserId);
-  //       fetchAllUsers();
-  //       handleClose();
-  //     } catch (error) {
-  //       console.log("Erro na requisição", error);
-  //     }
-  //   }
-  // };
+  const handleDeleteUser = async () => {
+    if (selectedUserId) {
+      try {
+        await deleteUser(selectedUserId);
+        fetchAllUsers();
+        handleClose();
+      } catch (error) {
+        console.log("Erro na requisição", error);
+      }
+    }
+  };
 
-  // const handleOpenDelete = (id: string) => {
-  //   setSelectedUserId(id);
-  //   setOpenDelete(true);
-  // };
+  const handleOpenDelete = (id: string) => {
+    setSelectedUserId(id);
+    setOpenDelete(true);
+  };
 
-  // const handleClose = () => {
-  //   setOpenDelete(false);
-  //   setSelectedUserId(null);
-  // };
+  const handleClose = () => {
+    setOpenDelete(false);
+    setSelectedUserId(null);
+  };
 
-  // const handleOpenEdit = async (id: string) => {
-  //   setSelectedUserId(id);
-  //   try {
-  //     const response = await fetchUserData(id);
-  //     setUserData(response.user);
-  //     setOpenEdit(true);
-  //   } catch (error) {
-  //     console.error("Erro ao abrir modal de edição:", error);
-  //   }
-  // };
+  const handleOpenEdit = async (id: string) => {
+    setSelectedUserId(id);
+    try {
+      const response = await fetchUserData(id);
+      setUserData(response.user);
+      setOpenEdit(true);
+    } catch (error) {
+      console.error("Erro ao abrir modal de edição:", error);
+    }
+  };
 
-  // const handleCloseEdit = () => {
-  //   setOpenEdit(false);
-  //   setSelectedUserId(null);
-  //   setUserData(null);
-  // };
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+    setSelectedUserId(null);
+    setUserData(null);
+  };
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm<UserData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserData>();
 
-  // const onSubmit: SubmitHandler<UserData> = async (data) => {
-  //   setLoading(true);
-  //   try {
-  //     if (selectedUserId && userData) {
-  //       const formattedData = { ...data, userId: selectedUserId };
+  const onSubmit: SubmitHandler<UserData> = async (data) => {
+    setLoading(true);
+    try {
+      if (selectedUserId && userData) {
+        const formattedData = { ...data, userId: selectedUserId };
 
-  //       if (userData.role === "MANAGER") {
-  //         await updateManagerUser(selectedUserId, formattedData);
-  //       } else if (userData.role === "EMPLOYEE") {
-  //         await updateEmployeeUser(selectedUserId, formattedData);
-  //       }
-  //       fetchAllUsers();
-  //       handleCloseEdit();
-  //     } else {
-  //       console.error("ID inválido ou dados do usuário ausentes");
-  //     }
-  //   } catch (error) {
-  //     console.error("Erro ao editar o usuário:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+        if (userData.role === "MANAGER") {
+          await updateManagerUser(selectedUserId, formattedData);
+        } else if (userData.role === "EMPLOYEE") {
+          await updateEmployeeUser(selectedUserId, formattedData);
+        }
+        fetchAllUsers();
+        handleCloseEdit();
+      } else {
+        console.error("ID inválido ou dados do usuário ausentes");
+      }
+    } catch (error) {
+      console.error("Erro ao editar o usuário:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -155,40 +152,50 @@ export default function TableProducts() {
         {/* head */}
         <thead>
           <tr>
-            <th className="text-center">Nome do produto</th>
-            <th className="text-center">Descrição</th>
-            <th className="text-center">Preço</th>
-            <th className="text-center">Quantidade em estoque</th>
-            <th className="text-center">Batch</th>
+            <th className="text-center">Nome do usuário</th>
+            <th className="text-center">E-mail</th>
+            <th className="text-center">Função</th>
+            <th className="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
-            <tr key={product.id}>
+          {users.map((user) => (
+            <tr key={user.id}>
               <td className="flex justify-center">
                 <div className="flex text-center gap-3">
+                  <div className="avatar">
+                    <div className="mask mask-squircle h-12 w-12">
+                      {user.avatar ? (
+                        <Image
+                          src={user.avatar}
+                          alt={`${user.name}'s Avatar`}
+                          width={48}
+                          height={48}
+                        />
+                      ) : (
+                        <FaUserCircle size={40} />
+                      )}
+                    </div>
+                  </div>
                   <div className="flex items-center">
-                    <div className="font-bold w-10">{product.name}</div>
+                    <div className="font-bold w-10">{user.name}</div>
                   </div>
                 </div>
               </td>
               <td className="text-center">
-                {product.description}
+                {user.email}
                 <br />
               </td>
               <td className="text-center">
-                {product.price}
+                {user.role}
                 <br />
+                {user.role === "Administrador" && (
+                  <span className="badge badge-ghost badge-sm">
+                    Administrador
+                  </span>
+                )}
               </td>
               <td className="text-center">
-                {product.quantity_in_stock}
-                <br />
-              </td>
-              <td className="text-center">
-                {product.batch}
-                <br />
-              </td>
-              {/* <td className="text-center">
                 <div className="flex justify-center space-x-2">
                   <button
                     className="btn btn-ghost btn-xs"
@@ -203,13 +210,13 @@ export default function TableProducts() {
                     <MdDeleteOutline size={17} color="red" />
                   </button>
                 </div>
-              </td> */}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* <Modal
+      <Modal
         open={openDelete}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -240,9 +247,9 @@ export default function TableProducts() {
             </Button>
           </div>
         </Box>
-      </Modal> */}
+      </Modal>
 
-      {/* {userData && (
+      {userData && (
         <Modal
           open={openEdit}
           onClose={handleCloseEdit}
@@ -293,7 +300,7 @@ export default function TableProducts() {
             </Form>
           </Box>
         </Modal>
-      )} */}
+      )}
     </div>
   );
 }

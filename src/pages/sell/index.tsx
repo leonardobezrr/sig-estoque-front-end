@@ -1,5 +1,5 @@
 import React from "react";
-import ManagerNavbar from "../components/manager-navbar";
+import ManagerNavbar from "../components/manager/manager-navbar";
 import TableUsers from "../components/manager-table";
 import { Container } from "@/styles/pages/manager";
 import { Header } from "@/styles/pages/login";

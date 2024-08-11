@@ -13,7 +13,6 @@ interface UserData {
   role: string;
 }
 
-
 export default function ManagerNavbar() {
   const { user, signOut } = useContext(AuthContext);
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -31,7 +30,7 @@ export default function ManagerNavbar() {
 
   useEffect(() => {
     getUserProfile();
-  }, [user])
+  }, [user]);
 
   function handleSignout() {
     try {

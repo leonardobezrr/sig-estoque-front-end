@@ -35,7 +35,6 @@ export default function Login() {
     setLoading(true);
     try {
       signIn(data);
-      console.log(data);
     } catch (error) {
       console.error("Falha no login:", error);
     } finally {

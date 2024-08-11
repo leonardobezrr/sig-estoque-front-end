@@ -1,5 +1,5 @@
 import { Container, StyledInputUpdateUser } from "@/styles/pages/manager";
-import ManagerNavbar from "../../components/manager-navbar";
+import ManagerNavbar from "../../components/manager/manager-navbar";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { fetchUserData, updateEmployeeUser, updateManagerUser } from "./api";
