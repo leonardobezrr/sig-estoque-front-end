@@ -1,5 +1,9 @@
 import { styled } from "styled-components";
+<<<<<<< HEAD
 import Select from '@mui/material/Select';
+=======
+import Select from "@mui/material/Select";
+>>>>>>> eefaa681c45cafb1040bc380046cb2ecd9299319
 
 export const Container = styled.div`
   display: flex;
@@ -35,6 +39,23 @@ export const StyledInput = styled.input`
   }
 `;
 
+<<<<<<< HEAD
+=======
+export const StyledInputUpdateUser = styled.input`
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.2rem;
+  outline: none;
+
+  &:focus {
+    border: 1.5px solid #522d80;
+  }
+`;
+
+>>>>>>> eefaa681c45cafb1040bc380046cb2ecd9299319
 export const Icon = styled.p`
   margin-top: 0.3rem;
   display: flex;
@@ -79,7 +100,11 @@ export const DefaultButton = styled.button`
 
 export const StyledSelect = styled(Select)`
   .MuiSelect-select {
+<<<<<<< HEAD
     color: white; 
+=======
+    color: white;
+>>>>>>> eefaa681c45cafb1040bc380046cb2ecd9299319
   }
 `;
 
@@ -90,4 +115,8 @@ export const StyledSelectContainer = styled.div`
   padding: 0.5rem;
   border-radius: 0.2rem;
   border: none;
+<<<<<<< HEAD
 `;
+=======
+`;
+>>>>>>> eefaa681c45cafb1040bc380046cb2ecd9299319

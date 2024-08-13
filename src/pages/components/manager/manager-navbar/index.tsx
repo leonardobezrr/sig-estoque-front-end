@@ -1,10 +1,36 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import SSLogo from "./SSLogo";
 import ProfileIcon from "./Profile";
 import { AuthContext } from "@/src/context/AuthContext";
+import Link from "next/link";
+import { fetchUserData } from "./api";
+
+interface UserData {
+  userId: string;
+  name: string;
+  email: string;
+  password?: string;
+  role: string;
+}
 
 export default function ManagerNavbar() {
-  const { signOut } = useContext(AuthContext);
+  const { user, signOut } = useContext(AuthContext);
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  const getUserProfile = async () => {
+    try {
+      if (typeof user === "string") {
+        const response = await fetchUserData(user);
+        setUserData(response.user);
+      }
+    } catch (error) {
+      console.log("Não foi possível encontrar o colaborador");
+    }
+  };
+
+  useEffect(() => {
+    getUserProfile();
+  }, [user]);
 
   function handleSignout() {
     try {
@@ -20,13 +46,13 @@ export default function ManagerNavbar() {
       style={{ paddingBottom: "4rem !important" }}
     >
       <div className="flex-1">
-        <a href="/manager" className="btn btn-ghost text-xl">
+        <Link href="/manager" className="btn btn-ghost text-xl">
           <SSLogo />
-        </a>
+        </Link>
       </div>
       <div className="flex-none gap-2 flex items-center">
         <div className="form-control">
-          <span>Ricardo</span>
+          <span>{user ? userData?.name : "Usuário"}</span>
         </div>
         <div className="dropdown dropdown-end">
           <div
@@ -40,12 +66,6 @@ export default function ManagerNavbar() {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            <li>
-              <a className="justify-between">Profile</a>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
             <li>
               <button
                 onClick={handleSignout}

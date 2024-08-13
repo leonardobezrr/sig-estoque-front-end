@@ -28,14 +28,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const loggedInUser = localStorage.getItem("@ss-user");
     if (loggedInUser) {
-      const { userId, token } = JSON.parse(loggedInUser);
-      setUser(userId);
+      const { id, token } = JSON.parse(loggedInUser);
+      setUser(id);
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
     } else {
       setUser("");
     }
   }, [router]);
 
+<<<<<<< HEAD
   const signIn = async (credentials: SignInCredentials) => {
     try {
       const response = await api.post("login", credentials);
@@ -54,6 +55,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch (err) {
       setUser("");
       console.error(err);
+=======
+  useEffect(() => {
+    if (credentials) {
+      const signIn = async () => {
+        try {
+          const response = await api.post("login", credentials);
+          const { token, id, role } = response.data;
+
+          localStorage.setItem("@ss-user", JSON.stringify({ id, token }));
+          setCookie(undefined, "ssAuth.token", token, {
+            maxAge: 60 * 60 * 24 * 30,
+            path: "/",
+          });
+
+          api.defaults.headers["Authorization"] = `Bearer ${token}`;
+          setUser(id);
+          if (role === "MANAGER") {
+            router.push("/manager");
+          } else if (role === "EMPLOYEE") {
+            router.push("/employee");
+          }
+        } catch (err) {
+          setUser("");
+          console.error(err);
+        } finally {
+          setCredentials(null);
+        }
+      };
+
+      signIn();
+>>>>>>> eefaa681c45cafb1040bc380046cb2ecd9299319
     }
   };
 

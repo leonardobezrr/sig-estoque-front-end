@@ -35,8 +35,12 @@ export default function Login() {
   const onSubmit: SubmitHandler<User> = async (data) => {
     setLoading(true);
     try {
+<<<<<<< HEAD
       await signIn(data);
       console.log(data);
+=======
+      signIn(data);
+>>>>>>> eefaa681c45cafb1040bc380046cb2ecd9299319
     } catch (error) {
       console.error("Falha no login:", error);
     } finally {

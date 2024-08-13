@@ -20,4 +20,8 @@ export const deleteUser = async (id: string) => {
 export const createUser = async (type: string, userBody: createUserRequest) => {
   const response = await api.post(`/${type}`, userBody);
   return response.data;
+<<<<<<< HEAD:src/pages/components/manager-table/api/index.ts
 }
+=======
+};
+>>>>>>> eefaa681c45cafb1040bc380046cb2ecd9299319:src/pages/components/manager/manager-table/api/index.ts
