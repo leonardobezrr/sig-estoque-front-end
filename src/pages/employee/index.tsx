@@ -1,12 +1,12 @@
 import React from "react";
-import ManagerNavbar from "../components/manager/manager-navbar";
 import TableProducts from "../components/employee/products-table";
 import { AddUserButton, Container } from "@/styles/pages/manager";
 import { DefaultButton } from "@/styles/pages/home";
+import EmployeeNavbar from "../components/employee/employee-navbar";
 export default function ManagerProducts() {
   return (
     <Container>
-      <ManagerNavbar />
+      <EmployeeNavbar />
       <AddUserButton>
         <DefaultButton>Adicionar Produto</DefaultButton>
       </AddUserButton>

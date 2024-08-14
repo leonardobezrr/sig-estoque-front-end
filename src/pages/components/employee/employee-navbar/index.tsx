@@ -4,7 +4,6 @@ import ProfileIcon from "./Profile";
 import { AuthContext } from "@/src/context/AuthContext";
 import Link from "next/link";
 import { fetchUserData } from "./api";
-import { Router } from "react-router-dom";
 import { useRouter } from "next/router";
 
 interface UserData {
@@ -15,7 +14,7 @@ interface UserData {
   role: string;
 }
 
-export default function ManagerNavbar() {
+export default function EmployeeNavbar() {
   const { user, signOut } = useContext(AuthContext);
   const [userData, setUserData] = useState<UserData | null>(null);
   const router = useRouter();
@@ -25,7 +24,8 @@ export default function ManagerNavbar() {
       if (typeof user === "string") {
         const response = await fetchUserData(user);
         setUserData(response.user);
-        if (response.user.role != "MANAGER") {
+        console.log(response.user);
+        if (response.user.role != "EMPLOYEE") {
           router.push("/login");
         }
       }
@@ -52,7 +52,7 @@ export default function ManagerNavbar() {
       style={{ paddingBottom: "4rem !important" }}
     >
       <div className="flex-1">
-        <Link href="/manager" className="btn btn-ghost text-xl">
+        <Link href="/employee" className="btn btn-ghost text-xl">
           <SSLogo />
         </Link>
       </div>
@@ -81,6 +81,7 @@ export default function ManagerNavbar() {
                 Sair
               </button>
             </li>
+            <Link href="/employee">Fornecedores</Link>
           </ul>
         </div>
       </div>
