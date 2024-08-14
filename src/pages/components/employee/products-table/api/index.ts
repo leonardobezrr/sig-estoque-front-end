@@ -21,7 +21,7 @@ export const fetchAllProductsData = async () => {
 };
 
 export const fetchAllProductByIdData = async (id: string) => {
-  const response = await api.get(`products/${id}`);
+  const response = await api.get(`/products/${id}`);
   return response.data;
 }
 
@@ -31,7 +31,7 @@ export const deleteProduct = async (id: string) => {
 }
 
 export const CreateProduct = async (productBody: CreateProductSchema) => {
-  const response = await api.post(`products`, productBody);
+  const response = await api.post(`/products`, productBody);
   return response.data;
 }
 

@@ -6,7 +6,7 @@ import { MdDeleteOutline, MdEdit } from "react-icons/md";
 //   updateEmployeeUser,
 //   updateManagerUser,
 // } from "../../manager/update-user/api/index";
-import { fetchAllProductsData } from "./api/index";
+import { deleteProduct, fetchAllProductsData } from "./api/index";
 import Image from "next/image";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -52,9 +52,9 @@ const modalStyle = {
 
 export default function TableProducts() {
   const [products, setProducts] = useState<Product[]>([]);
-  // const [openDelete, setOpenDelete] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   // const [openEdit, setOpenEdit] = useState(false);
-  // const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   // const [userData, setUserData] = useState<UserData | null>(null);
   // const [loading, setLoading] = useState(false);
 
@@ -71,27 +71,27 @@ export default function TableProducts() {
     fetchAllProducts();
   }, []);
 
-  // const handleDeleteUser = async () => {
-  //   if (selectedUserId) {
-  //     try {
-  //       await deleteUser(selectedUserId);
-  //       fetchAllUsers();
-  //       handleClose();
-  //     } catch (error) {
-  //       console.log("Erro na requisição", error);
-  //     }
-  //   }
-  // };
+  const handleDeleteUser = async () => {
+    if (selectedUserId) {
+      try {
+        await deleteProduct(selectedUserId);
+        fetchAllProducts();
+        handleClose();
+      } catch (error) {
+        console.log("Erro na requisição", error);
+      }
+    }
+  };
 
-  // const handleOpenDelete = (id: string) => {
-  //   setSelectedUserId(id);
-  //   setOpenDelete(true);
-  // };
+  const handleOpenDelete = (id: string) => {
+    setSelectedUserId(id);
+    setOpenDelete(true);
+  };
 
-  // const handleClose = () => {
-  //   setOpenDelete(false);
-  //   setSelectedUserId(null);
-  // };
+  const handleClose = () => {
+    setOpenDelete(false);
+    setSelectedUserId(null);
+  };
 
   // const handleOpenEdit = async (id: string) => {
   //   setSelectedUserId(id);
@@ -186,28 +186,28 @@ export default function TableProducts() {
                 {product.batch}
                 <br />
               </td>
-              {/* <td className="text-center">
+              <td className="text-center">
                 <div className="flex justify-center space-x-2">
-                  <button
+                  {/* <button
                     className="btn btn-ghost btn-xs"
                     onClick={() => handleOpenEdit(user.id)}
                   >
                     <MdEdit size={17} />
-                  </button>
+                  </button> */}
                   <button
-                    onClick={() => handleOpenDelete(user.id)}
+                    onClick={() => handleOpenDelete(product.id)}
                     className="btn btn-ghost btn-xs"
                   >
                     <MdDeleteOutline size={17} color="red" />
                   </button>
                 </div>
-              </td> */}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* <Modal
+      <Modal
         open={openDelete}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -238,7 +238,7 @@ export default function TableProducts() {
             </Button>
           </div>
         </Box>
-      </Modal> */}
+      </Modal>
 
       {/* {userData && (
         <Modal
