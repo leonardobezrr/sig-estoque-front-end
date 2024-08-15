@@ -6,7 +6,7 @@ import { MdDeleteOutline, MdEdit } from "react-icons/md";
 //   updateEmployeeUser,
 //   updateManagerUser,
 // } from "../../manager/update-user/api/index";
-import { deleteProduct, fetchAllProductsData } from "./api/index";
+import { deleteProduct, fetchAllProductsData, fetchAllProductsByIdData, UpdateProduct } from "./api/index";
 import Image from "next/image";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -22,6 +22,7 @@ import {
 } from "@/styles/pages/manager";
 import { FaUser } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 export interface Product {
   id: string;
@@ -42,21 +43,23 @@ const modalStyle = {
   p: 4,
 };
 
-// interface UserData {
-//   userId: string;
-//   name: string;
-//   email: string;
-//   password?: string;
-//   role: string;
-// }
+interface ProductData {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  quantity_in_stock: number;
+}
+
+// functions for render tables
 
 export default function TableProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [openDelete, setOpenDelete] = useState(false);
-  // const [openEdit, setOpenEdit] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  // const [userData, setUserData] = useState<UserData | null>(null);
-  // const [loading, setLoading] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [productData, setProductData] = useState<ProductData | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchAllProducts = async () => {
     try {
@@ -71,10 +74,10 @@ export default function TableProducts() {
     fetchAllProducts();
   }, []);
 
-  const handleDeleteUser = async () => {
-    if (selectedUserId) {
+  const handleDeleteProduct = async () => {
+    if (selectedProductId) {
       try {
-        await deleteProduct(selectedUserId);
+        await deleteProduct(selectedProductId);
         fetchAllProducts();
         handleClose();
       } catch (error) {
@@ -84,60 +87,67 @@ export default function TableProducts() {
   };
 
   const handleOpenDelete = (id: string) => {
-    setSelectedUserId(id);
+    setSelectedProductId(id);
     setOpenDelete(true);
   };
 
   const handleClose = () => {
     setOpenDelete(false);
-    setSelectedUserId(null);
+    setSelectedProductId(null);
   };
 
-  // const handleOpenEdit = async (id: string) => {
-  //   setSelectedUserId(id);
-  //   try {
-  //     const response = await fetchUserData(id);
-  //     setUserData(response.user);
-  //     setOpenEdit(true);
-  //   } catch (error) {
-  //     console.error("Erro ao abrir modal de edição:", error);
-  //   }
-  // };
+  const handleOpenEdit = async (id: string) => {
+    setSelectedProductId(id);
+    try {
+      const response = await fetchAllProductsByIdData(id);
+      setProductData(response.product);
+      setOpenEdit(true);
+    } catch (error) {
+      console.error("Erro ao abrir modal de edição:", error);
+    }
+  };
 
-  // const handleCloseEdit = () => {
-  //   setOpenEdit(false);
-  //   setSelectedUserId(null);
-  //   setUserData(null);
-  // };
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+    setSelectedProductId(null);
+    setProductData(null); // Limpa os dados do produto ao fechar o modal
+  };
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm<UserData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset, // Adicionado para redefinir o formulário
+  } = useForm<ProductData>();
 
-  // const onSubmit: SubmitHandler<UserData> = async (data) => {
-  //   setLoading(true);
-  //   try {
-  //     if (selectedUserId && userData) {
-  //       const formattedData = { ...data, userId: selectedUserId };
+  const onSubmit: SubmitHandler<ProductData> = async (data) => {
+    setLoading(true);
+    try {
+      const payload = {
+        ...data,
+        price: Number(data.price),
+        quantity_in_stock: Number(data.quantity_in_stock),
+      };
+      if (selectedProductId && productData) {
+        await UpdateProduct(productData.id, payload);
+        fetchAllProducts();
+        handleCloseEdit();
+      } else {
+        console.error("ID inválido ou dados do produto ausentes");
+      }
+    } catch (error) {
+      console.error("Erro ao editar o produto:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  //       if (userData.role === "MANAGER") {
-  //         await updateManagerUser(selectedUserId, formattedData);
-  //       } else if (userData.role === "EMPLOYEE") {
-  //         await updateEmployeeUser(selectedUserId, formattedData);
-  //       }
-  //       fetchAllUsers();
-  //       handleCloseEdit();
-  //     } else {
-  //       console.error("ID inválido ou dados do usuário ausentes");
-  //     }
-  //   } catch (error) {
-  //     console.error("Erro ao editar o usuário:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  // Redefine o formulário sempre que `productData` mudar
+  useEffect(() => {
+    if (productData) {
+      reset(productData);
+    }
+  }, [productData, reset]);
 
   return (
     <div
@@ -188,12 +198,12 @@ export default function TableProducts() {
               </td>
               <td className="text-center">
                 <div className="flex justify-center space-x-2">
-                  {/* <button
+                  <button
                     className="btn btn-ghost btn-xs"
-                    onClick={() => handleOpenEdit(user.id)}
+                    onClick={() => handleOpenEdit(product.id)}
                   >
                     <MdEdit size={17} />
-                  </button> */}
+                  </button>
                   <button
                     onClick={() => handleOpenDelete(product.id)}
                     className="btn btn-ghost btn-xs"
@@ -230,7 +240,7 @@ export default function TableProducts() {
               Cancelar
             </Button>
             <Button
-              onClick={handleDeleteUser}
+              onClick={handleDeleteProduct}
               variant="contained"
               color="error"
             >
@@ -240,7 +250,7 @@ export default function TableProducts() {
         </Box>
       </Modal>
 
-      {/* {userData && (
+      {productData && (
         <Modal
           open={openEdit}
           onClose={handleCloseEdit}
@@ -249,7 +259,7 @@ export default function TableProducts() {
         >
           <Box sx={modalStyle}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Editar Usuário
+              Editar Produto
             </Typography>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <Icon>
@@ -259,7 +269,6 @@ export default function TableProducts() {
                   placeholder="Nome"
                   aria-label="Nome"
                   {...register("name", { required: "Nome é obrigatório" })}
-                  defaultValue={userData.name}
                 />
               </Icon>
               {errors.name && <Text>{errors.name.message}</Text>}
@@ -267,31 +276,68 @@ export default function TableProducts() {
               <Icon>
                 <FaUser size={24} aria-hidden="true" />
                 <StyledInputUpdateUser
-                  type="email"
-                  placeholder="Email"
-                  aria-label="Email"
-                  {...register("email", { required: "Email é obrigatório" })}
-                  defaultValue={userData.email}
+                  type="text"
+                  placeholder="Descrição"
+                  aria-label="Descrição"
+                  {...register("description", { required: "Descrição é obrigatória" })}
                 />
               </Icon>
-              {errors.email && <Text>{errors.email.message}</Text>}
-              <DefaultButton
-                type="submit"
-                aria-label="Salvar"
-                disabled={loading}
-              >
-                {loading ? (
-                  <Box sx={{ display: "flex" }}>
-                    <CircularProgress />
-                  </Box>
-                ) : (
-                  "Salvar"
-                )}
-              </DefaultButton>
+              {errors.description && <Text>{errors.description.message}</Text>}
+
+              <Icon>
+                <FaUser size={24} aria-hidden="true" />
+                <StyledInputUpdateUser
+                  type="number"
+                  placeholder="Preço"
+                  aria-label="Preço"
+                  {...register("price", { required: "Preço é obrigatório" })}
+                />
+              </Icon>
+              {errors.price && <Text>{errors.price.message}</Text>}
+
+              <Icon>
+                <FaUser size={24} aria-hidden="true" />
+                <StyledInputUpdateUser
+                  type="number"
+                  placeholder="Quantidade em estoque"
+                  aria-label="Quantidade em estoque"
+                  {...register("quantity_in_stock", { required: "Quantidade em estoque é obrigatória" })}
+                />
+              </Icon>
+              {errors.quantity_in_stock && <Text>{errors.quantity_in_stock.message}</Text>}
+
+              <Icon>
+                <FaUser size={24} aria-hidden="true" />
+                <StyledInputUpdateUser
+                  type="text"
+                  placeholder="Lote"
+                  aria-label="Lote"
+                  {...register("batch", { required: "Lote é obrigatório" })}
+                />
+              </Icon>
+              {errors.batch && <Text>{errors.batch.message}</Text>}
+
+              <div className="flex justify-end mt-4">
+                <Button
+                  onClick={handleCloseEdit}
+                  variant="outlined"
+                  color="inherit"
+                  sx={{ marginRight: 2 }}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
+                  {loading ? <CircularProgress size={24} /> : "Salvar"}
+                </Button>
+              </div>
             </Form>
           </Box>
         </Modal>
-      )} */}
+      )}
     </div>
   );
 }

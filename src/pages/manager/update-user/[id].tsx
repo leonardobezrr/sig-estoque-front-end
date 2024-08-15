@@ -36,7 +36,7 @@ function UpdateUser() {
         setUserData(response.user);
       }
     } catch (error) {
-      console.log("Não foi possível encontrar o colaborador");
+      console.log("Não foi possível encontrar o colaborador", error);
     }
   };
 

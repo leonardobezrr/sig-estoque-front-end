@@ -20,7 +20,7 @@ export const fetchAllProductsData = async () => {
   return response.data;
 };
 
-export const fetchAllProductByIdData = async (id: string) => {
+export const fetchAllProductsByIdData = async (id: string) => {
   const response = await api.get(`/products/${id}`);
   return response.data;
 }

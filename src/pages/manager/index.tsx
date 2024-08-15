@@ -9,7 +9,7 @@ import {
 } from "../components/manager/create-user-modal/modal-context";
 import CreateUserModal from "../components/manager/create-user-modal/index";
 
-const ManagerUsers: React.FC = () => {
+const Manager: React.FC = () => {
   const { openModal } = useModal();
 
   return (
@@ -27,7 +27,7 @@ const ManagerUsers: React.FC = () => {
 export default function ManagerUsersWithProvider() {
   return (
     <ModalProvider>
-      <ManagerUsers />
+      <Manager />
     </ModalProvider>
   );
 }
