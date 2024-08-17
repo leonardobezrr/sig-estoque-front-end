@@ -90,7 +90,6 @@ export default function TableSuppliers() {
   };
 
   const handleClose = () => {
-    console.log("Fechando modal");
     setOpenDelete(false);
     setSelectedSupplierId(null);
   };
