@@ -1,18 +1,11 @@
 import { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { MdDeleteOutline, MdEdit } from "react-icons/md";
-// import {
-//   fetchUserData,
-//   updateEmployeeUser,
-//   updateManagerUser,
-// } from "../../manager/update-user/api/index";
 import { deleteProduct, fetchAllProductsData, fetchAllProductsByIdData, UpdateProduct } from "./api/index";
-import Image from "next/image";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-// import { useForm, SubmitHandler } from "react-hook-form";
 import {
   DefaultButton,
   Form,
@@ -49,6 +42,7 @@ interface ProductData {
   description: string;
   price: number;
   quantity_in_stock: number;
+  batch: string;
 }
 
 // functions for render tables
@@ -117,7 +111,7 @@ export default function TableProducts() {
     register,
     handleSubmit,
     formState: { errors },
-    reset, // Adicionado para redefinir o formulário
+    reset,
   } = useForm<ProductData>();
 
   const onSubmit: SubmitHandler<ProductData> = async (data) => {
@@ -142,7 +136,6 @@ export default function TableProducts() {
     }
   };
 
-  // Redefine o formulário sempre que `productData` mudar
   useEffect(() => {
     if (productData) {
       reset(productData);
@@ -268,6 +261,7 @@ export default function TableProducts() {
                   type="text"
                   placeholder="Nome"
                   aria-label="Nome"
+                  label="nome"
                   {...register("name", { required: "Nome é obrigatório" })}
                 />
               </Icon>
@@ -326,13 +320,11 @@ export default function TableProducts() {
                 >
                   Cancelar
                 </Button>
-                <Button
+                <DefaultButton
                   type="submit"
-                  variant="contained"
-                  color="primary"
                 >
                   {loading ? <CircularProgress size={24} /> : "Salvar"}
-                </Button>
+                </DefaultButton>
               </div>
             </Form>
           </Box>

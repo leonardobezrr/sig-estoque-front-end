@@ -97,6 +97,7 @@ export default function TableUsers() {
     try {
       const response = await fetchUserData(id);
       setUserData(response.user);
+      reset(response.user);  
       setOpenEdit(true);
     } catch (error) {
       console.error("Erro ao abrir modal de edição:", error);
@@ -107,12 +108,14 @@ export default function TableUsers() {
     setOpenEdit(false);
     setSelectedUserId(null);
     setUserData(null);
+    reset();
   };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm<UserData>();
 
   const onSubmit: SubmitHandler<UserData> = async (data) => {
@@ -249,57 +252,70 @@ export default function TableUsers() {
         </Box>
       </Modal>
 
-      {userData && (
-        <Modal
-          open={openEdit}
-          onClose={handleCloseEdit}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={modalStyle}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Editar Usuário
-            </Typography>
-            <Form onSubmit={handleSubmit(onSubmit)}>
-              <Icon>
-                <FaUser size={24} aria-hidden="true" />
-                <StyledInputUpdateUser
-                  type="text"
-                  placeholder="Nome"
-                  aria-label="Nome"
-                  {...register("name", { required: "Nome é obrigatório" })}
-                  defaultValue={userData.name}
-                />
-              </Icon>
-              {errors.name && <Text>{errors.name.message}</Text>}
+    {userData && (
+      <Modal
+        open={openEdit}
+        onClose={handleCloseEdit}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Editar Usuário
+          </Typography>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <label style={{ marginBottom: '-15px'}} htmlFor="name">Nome</label>
+            <Icon>
+              <FaUser size={24} aria-hidden="true" />
+              <StyledInputUpdateUser
+                id="name"
+                type="text"
+                placeholder="Nome"
+                aria-label="Nome"
+                {...register("name", { required: "Nome é obrigatório" })}
+                defaultValue={userData.name}
+              />
+            </Icon>
+            {errors.name && <Text>{errors.name.message}</Text>}
 
-              <Icon>
-                <FaUser size={24} aria-hidden="true" />
-                <StyledInputUpdateUser
-                  type="email"
-                  placeholder="Email"
-                  aria-label="Email"
-                  {...register("email", { required: "Email é obrigatório" })}
-                  defaultValue={userData.email}
-                />
-              </Icon>
-              {errors.email && <Text>{errors.email.message}</Text>}
-              <DefaultButton
-                type="submit"
-                aria-label="Salvar"
-                disabled={loading}
-              >
-                {loading ? (
-                  <Box sx={{ display: "flex" }}>
-                    <CircularProgress />
-                  </Box>
-                ) : (
-                  "Salvar"
-                )}
-              </DefaultButton>
-            </Form>
-          </Box>
-        </Modal>
+            <label style={{ marginBottom: '-15px'}} htmlFor="name">Email</label>
+            <Icon>
+              <FaUser size={24} aria-hidden="true" />
+              <StyledInputUpdateUser
+                id="email"
+                type="email"
+                placeholder="Email"
+                aria-label="Email"
+                {...register("email", { required: "Email é obrigatório" })}
+                defaultValue={userData.email}
+              />
+            </Icon>
+            {errors.email && <Text>{errors.email.message}</Text>}
+
+            <Button
+              onClick={handleCloseEdit}
+              variant="outlined"
+              color="inherit"
+            >
+              Cancelar
+            </Button>
+            
+            <DefaultButton
+              type="submit"
+              aria-label="Salvar"
+              disabled={loading}
+            >
+              {loading ? (
+                <Box sx={{ display: "flex" }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                "Salvar"
+              )}
+            </DefaultButton>
+          </Form>
+        </Box>
+      </Modal>
       )}
     </div>
   );
