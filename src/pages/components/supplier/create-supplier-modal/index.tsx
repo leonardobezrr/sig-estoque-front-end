@@ -8,17 +8,14 @@ import {
   Icon,
   StyledInput,
   Text,
-  StyledSelectContainer,
-  StyledSelect,
 } from "@/styles/pages/manager";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { CircularProgress } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import { CreateProduct } from "../products-table/api/index"
 import { useModal } from "./modal-context";
-import { fetchSuppliersData } from "./api";
+import { createSupplier } from "./api";
 import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { IoPricetagOutline } from "react-icons/io5";
+import { FaRegUser, FaRegBuilding, FaPhoneAlt   } from "react-icons/fa";
 
 const style = {
   position: "absolute" as const,
@@ -30,14 +27,14 @@ const style = {
   p: 4,
 };
 
-interface CreateProduct {
-  name: string;
-  description: string;
-  price: number;
-  quantity_in_stock: number;
+interface CreateSupplier {
+  social_name: string;
+  company_name: string;
+  phone_number: string;
+  cnpj: string;
 }
 
-export default function CreateProductModal() {
+export default function CreateSupplierModal() {
   const [loading, setLoading] = React.useState(false);
   const { isOpen, closeModal } = useModal();
 
@@ -45,24 +42,18 @@ export default function CreateProductModal() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateProduct>();
+  } = useForm<CreateSupplier>();
 
   
-  const onSubmit: SubmitHandler<CreateProduct> = async (data) => {
+  const onSubmit: SubmitHandler<CreateSupplier> = async (data) => {
     setLoading(true);
     try {
-      const payload = {
-        ...data,
-        price: Number(data.price),
-        quantity_in_stock: Number(data.quantity_in_stock),
-      };
-      
-      await CreateProduct(payload);
-      console.log("Produto cadastrado com sucesso");
+      await createSupplier(data);
+      console.log("Fornecedor cadastrado com sucesso");
       closeModal();
-      window.location.href = "/employee";
+      window.location.href = "/employee/supplier";
     } catch (error) {
-      console.error("Erro ao cadastrar o produto", error);
+      console.error("Erro ao cadastrar o fornecedor", error);
     } finally {
       setLoading(false);
     }
@@ -81,46 +72,46 @@ export default function CreateProductModal() {
         </Typography>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Icon>
-            <MdOutlineProductionQuantityLimits size={24} aria-hidden="true" />
+            <FaRegUser size={24} aria-hidden="true" />
             <StyledInput
               type="text"
-              placeholder="Nome do produto"
+              placeholder="Nome do fornecedor"
               aria-label="Nome"
-              {...register("name", { required: "Nome é obrigatório" })}
+              {...register("social_name", { required: "Nome é obrigatório" })}
             />
           </Icon>
           <Icon>
-            <MdOutlineProductionQuantityLimits size={24} aria-hidden="true" />
+            <FaRegBuilding size={24} aria-hidden="true" />
             <StyledInput
               type="text"
-              placeholder="Descrição do produto"
+              placeholder="Nome da empresa"
               aria-label="Nome"
-              {...register("description", { required: "Descrição é obrigatória" })}
+              {...register("company_name", { required: "Nome da empresa é obrigatório" })}
             />
           </Icon>
-          {errors.description && <Text>{errors.description.message}</Text>}
+          {errors.company_name && <Text>{errors.company_name.message}</Text>}
+
+          <Icon>
+            <FaPhoneAlt  size={24} aria-hidden="true" />
+            <StyledInput
+              type="text"
+              placeholder="Telefone do fornecedor"
+              aria-label="Telefone"
+              {...register("phone_number", { required: "Telefone é obrigatório" })}
+            />
+          </Icon>
+          {errors.phone_number && <Text>{errors.phone_number.message}</Text>}
 
           <Icon>
             <IoPricetagOutline size={24} aria-hidden="true" />
             <StyledInput
-              type="number"
-              placeholder="Preço do produto"
-              aria-label="Preço"
-              {...register("price", { required: "Preço é obrigatório" })}
+              type="text"
+              placeholder="CNPJ"
+              aria-label="CNPJ"
+              {...register("cnpj", { required: "Quantidade é obrigatória" })}
             />
           </Icon>
-          {errors.price && <Text>{errors.price.message}</Text>}
-
-          <Icon>
-            <MdOutlineProductionQuantityLimits size={24} aria-hidden="true" />
-            <StyledInput
-              type="number"
-              placeholder="Quantidade de itens"
-              aria-label="Quantidade"
-              {...register("quantity_in_stock", { required: "Quantidade é obrigatória" })}
-            />
-          </Icon>
-          {errors.quantity_in_stock && <Text>{errors.quantity_in_stock.message}</Text>}
+          {errors.cnpj && <Text>{errors.cnpj.message}</Text>}
 
           <DefaultButton type="submit" aria-label="Login" disabled={loading}>
             {loading ? (

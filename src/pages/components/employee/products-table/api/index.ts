@@ -4,7 +4,6 @@ interface CreateProductSchema {
   name: string;
   description: string;
   price: number;
-  supplierId: string;
   quantity_in_stock: number;
 }
 

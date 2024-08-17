@@ -7,6 +7,7 @@ import {
   ModalProvider,
 } from "../components/employee/create-product-modal/modal-context";
 import CreateProductModal from "../components/employee/create-product-modal/index";
+import Link from "next/link";
 
 const Employee: React.FC = () => {
   const { openModal } = useModal();
@@ -17,8 +18,9 @@ const Employee: React.FC = () => {
       <AddProductButton>
         <div className="flex gap-4">
           <CreateProductButton onClick={openModal}>Cadastrar Produto</CreateProductButton>
-          <CreateProductButton onClick={openModal}>Cadastrar Fornecedor</CreateProductButton>
-          <CreateProductButton onClick={openModal}>Cadastrar Venda</CreateProductButton>
+          <CreateProductButton>Compras</CreateProductButton>
+          <CreateProductButton>Vendas</CreateProductButton>
+          <CreateProductButton><Link href='employee/supplier'>Fornecedores</Link></CreateProductButton>
         </div>
       </AddProductButton>
       <TableProducts />

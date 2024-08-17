@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { MdDeleteOutline, MdEdit, MdLabel } from "react-icons/md";
-import { fetchAllSuppliersData } from "./api/index";
+import { 
+  deleteSupplier, 
+  fetchAllSuppliersData, 
+  fetchAllSuppliersByIdData, 
+  updateSupplier 
+} from "./api/index";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -47,11 +52,11 @@ interface SupplierData {
 
 export default function TableSuppliers() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  // const [openDelete, setOpenDelete] = useState(false);
-  // const [openEdit, setOpenEdit] = useState(false);
-  // const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
-  // const [productData, setProductData] = useState<ProductData | null>(null);
-  // const [loading, setLoading] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [selectedSupplierId, setSelectedSupplierId] = useState<string | null>(null);
+  const [supplierData, setSupplierData] = useState<SupplierData | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchAllSuppliers = async () => {
     try {
@@ -66,44 +71,46 @@ export default function TableSuppliers() {
     fetchAllSuppliers();
   }, []);
 
-  // const handleDeleteProduct = async () => {
-  //   if (selectedProductId) {
-  //     try {
-  //       await deleteProduct(selectedProductId);
-  //       fetchAllProducts();
-  //       handleClose();
-  //     } catch (error) {
-  //       console.log("Erro na requisição", error);
-  //     }
-  //   }
-  // };
+  const handleDeleteSupplier = async () => {
+    if (selectedSupplierId) {
+      try {
+        await deleteSupplier(selectedSupplierId);
+        console.log("Fornecedor excluído com sucesso");
+        await fetchAllSuppliers();
+        handleClose();
+      } catch (error) {
+        console.error("Erro na requisição ao excluir fornecedor:", error);
+      }
+    }
+  };
 
-  // const handleOpenDelete = (id: string) => {
-  //   setSelectedProductId(id);
-  //   setOpenDelete(true);
-  // };
+  const handleOpenDelete = (id: string) => {
+    setSelectedSupplierId(id);
+    setOpenDelete(true);
+  };
 
-  // const handleClose = () => {
-  //   setOpenDelete(false);
-  //   setSelectedProductId(null);
-  // };
+  const handleClose = () => {
+    console.log("Fechando modal");
+    setOpenDelete(false);
+    setSelectedSupplierId(null);
+  };
 
-  // const handleOpenEdit = async (id: string) => {
-  //   setSelectedProductId(id);
-  //   try {
-  //     const response = await fetchAllProductsByIdData(id);
-  //     setProductData(response.product);
-  //     setOpenEdit(true);
-  //   } catch (error) {
-  //     console.error("Erro ao abrir modal de edição:", error);
-  //   }
-  // };
+  const handleOpenEdit = async (id: string) => {
+    setSelectedSupplierId(id);
+    try {
+      const response = await fetchAllSuppliersByIdData(id);
+      setSupplierData(response.supplier);
+      setOpenEdit(true);
+    } catch (error) {
+      console.error("Erro ao abrir modal de edição:", error);
+    }
+  };
 
-  // const handleCloseEdit = () => {
-  //   setOpenEdit(false);
-  //   setSelectedProductId(null);
-  //   setProductData(null);
-  // };
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+    setSelectedSupplierId(null);
+    setSupplierData(null);
+  };
 
   const {
     register,
@@ -112,33 +119,28 @@ export default function TableSuppliers() {
     reset,
   } = useForm<SupplierData>();
 
-  // const onSubmit: SubmitHandler<SupplierData> = async (data) => {
-  //   setLoading(true);
-  //   try {
-  //     const payload = {
-  //       ...data,
-  //       price: Number(data.price),
-  //       quantity_in_stock: Number(data.quantity_in_stock),
-  //     };
-  //     if (selectedProductId && productData) {
-  //       await UpdateProduct(productData.id, payload);
-  //       fetchAllProducts();
-  //       handleCloseEdit();
-  //     } else {
-  //       console.error("ID inválido ou dados do produto ausentes");
-  //     }
-  //   } catch (error) {
-  //     console.error("Erro ao editar o produto:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const onSubmit: SubmitHandler<SupplierData> = async (data) => {
+    setLoading(true);
+    try {
+      if (supplierData && selectedSupplierId) {
+        await updateSupplier(supplierData.id, data);
+        fetchAllSuppliers();
+        handleCloseEdit();
+      } else {
+        console.error("ID inválido ou dados do fornecedor ausentes");
+      }
+    } catch (error) {
+      console.error("Erro ao editar o fornecedor:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // useEffect(() => {
-  //   if (productData) {
-  //     reset(productData);
-  //   }
-  // }, [productData, reset]);
+  useEffect(() => {
+    if (supplierData) {
+      reset(supplierData);
+    }
+  }, [supplierData, reset]);
 
   return (
     <div
@@ -151,7 +153,6 @@ export default function TableSuppliers() {
       }}
     >
       <table className="table w-full">
-        {/* head */}
         <thead>
           <tr>
             <th className="text-center">Nome social</th>
@@ -204,7 +205,7 @@ export default function TableSuppliers() {
         </tbody>
       </table>
 
-      {/* <Modal
+      <Modal
         open={openDelete}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -227,7 +228,7 @@ export default function TableSuppliers() {
               Cancelar
             </Button>
             <Button
-              onClick={handleDeleteProduct}
+              onClick={handleDeleteSupplier}
               variant="contained"
               color="error"
             >
@@ -235,9 +236,9 @@ export default function TableSuppliers() {
             </Button>
           </div>
         </Box>
-      </Modal> */}
+      </Modal>
 
-      {/* {productData && (
+      {supplierData && (
         <Modal
           open={openEdit}
           onClose={handleCloseEdit}
@@ -249,65 +250,53 @@ export default function TableSuppliers() {
               Editar Produto
             </Typography>
             <Form onSubmit={handleSubmit(onSubmit)}>
-            <label style={{ marginBottom: '-20px'}} htmlFor="name">Nome</label>
+            <label style={{ marginBottom: '-20px'}} htmlFor="name">Nome social</label>
               <Icon>
                 <FaUser size={24} aria-hidden="true" />
                 <StyledInputUpdateUser
                   type="text"
-                  placeholder="Nome"
-                  aria-label="Nome"
-                  {...register("name", { required: "Nome é obrigatório" })}
+                  placeholder="Nome social"
+                  aria-label="Nome social"
+                  {...register("social_name", { required: "Nome social é obrigatório" })}
                 />
               </Icon>
-              {errors.name && <Text>{errors.name.message}</Text>}
+              {errors.social_name && <Text>{errors.social_name.message}</Text>}
 
-              <label style={{ marginBottom: '-20px'}} htmlFor="name">Descrição</label>
+              <label style={{ marginBottom: '-20px'}} htmlFor="name">Nome da empresa</label>
               <Icon>
                 <TbFileDescription size={24} aria-hidden="true" />
                 <StyledInputUpdateUser
                   type="text"
-                  placeholder="Descrição"
-                  aria-label="Descrição"
-                  {...register("description", { required: "Descrição é obrigatória" })}
+                  placeholder="Nome da empresa"
+                  aria-label="Nome da empresa"
+                  {...register("company_name", { required: "Nome da empresa é obrigatório" })}
                 />
               </Icon>
-              {errors.description && <Text>{errors.description.message}</Text>}
+              {errors.company_name && <Text>{errors.company_name.message}</Text>}
 
-              <label style={{ marginBottom: '-20px'}} htmlFor="name">Preço</label>
+              <label style={{ marginBottom: '-20px'}} htmlFor="name">Número de telefone</label>
               <Icon>
                 <IoPricetagsOutline size={24} aria-hidden="true" />
                 <StyledInputUpdateUser
-                  type="number"
-                  placeholder="Preço"
-                  aria-label="Preço"
-                  {...register("price", { required: "Preço é obrigatório" })}
+                  type="string"
+                  placeholder="Número de telefone"
+                  aria-label="Número de telefone"
+                  {...register("phone_number", { required: "Número de telefone é obrigatório" })}
                 />
               </Icon>
-              {errors.price && <Text>{errors.price.message}</Text>}
+              {errors.phone_number && <Text>{errors.phone_number.message}</Text>}
 
-              <label style={{ marginBottom: '-20px'}} htmlFor="name">Quantidade</label>
+              <label style={{ marginBottom: '-20px'}} htmlFor="name">CNPJ</label>
               <Icon>
                 <CiBoxes size={24} aria-hidden="true" />
                 <StyledInputUpdateUser
-                  type="number"
-                  placeholder="Quantidade em estoque"
-                  aria-label="Quantidade em estoque"
-                  {...register("quantity_in_stock", { required: "Quantidade em estoque é obrigatória" })}
+                  type="string"
+                  placeholder="CNPJ"
+                  aria-label="CNPJ"
+                  {...register("cnpj", { required: "CNPJ é obrigatório" })}
                 />
               </Icon>
-              {errors.quantity_in_stock && <Text>{errors.quantity_in_stock.message}</Text>}
-
-              <label style={{ marginBottom: '-20px'}} htmlFor="name">Lote</label>
-              <Icon>
-                <MdLabel size={24} aria-hidden="true" />
-                <StyledInputUpdateUser
-                  type="text"
-                  placeholder="Lote"
-                  aria-label="Lote"
-                  {...register("batch", { required: "Lote é obrigatório" })}
-                />
-              </Icon>
-              {errors.batch && <Text>{errors.batch.message}</Text>}
+              {errors.cnpj && <Text>{errors.cnpj.message}</Text>}
 
               <Button
               onClick={handleCloseEdit}
@@ -333,7 +322,7 @@ export default function TableSuppliers() {
             </Form>
           </Box>
         </Modal>
-      )} */}
+      )}
     </div>
   );
 }
