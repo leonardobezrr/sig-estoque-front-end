@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
-import { MdDeleteOutline, MdEdit } from "react-icons/md";
+import { MdDeleteOutline, MdEdit, MdLabel } from "react-icons/md";
 import { deleteProduct, fetchAllProductsData, fetchAllProductsByIdData, UpdateProduct } from "./api/index";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -16,6 +15,9 @@ import {
 import { FaUser } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { TbFileDescription } from "react-icons/tb";
+import { IoPricetagsOutline } from "react-icons/io5";
+import { CiBoxes } from "react-icons/ci";
 
 export interface Product {
   id: string;
@@ -44,8 +46,6 @@ interface ProductData {
   quantity_in_stock: number;
   batch: string;
 }
-
-// functions for render tables
 
 export default function TableProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -104,7 +104,7 @@ export default function TableProducts() {
   const handleCloseEdit = () => {
     setOpenEdit(false);
     setSelectedProductId(null);
-    setProductData(null); // Limpa os dados do produto ao fechar o modal
+    setProductData(null);
   };
 
   const {
@@ -169,7 +169,7 @@ export default function TableProducts() {
               <td className="flex justify-center">
                 <div className="flex text-center gap-3">
                   <div className="flex items-center">
-                    <div className="font-bold w-10">{product.name}</div>
+                    <div className="font-bold w-10 flex justify-center">{product.name}</div>
                   </div>
                 </div>
               </td>
@@ -255,20 +255,21 @@ export default function TableProducts() {
               Editar Produto
             </Typography>
             <Form onSubmit={handleSubmit(onSubmit)}>
+            <label style={{ marginBottom: '-20px'}} htmlFor="name">Nome</label>
               <Icon>
                 <FaUser size={24} aria-hidden="true" />
                 <StyledInputUpdateUser
                   type="text"
                   placeholder="Nome"
                   aria-label="Nome"
-                  label="nome"
                   {...register("name", { required: "Nome é obrigatório" })}
                 />
               </Icon>
               {errors.name && <Text>{errors.name.message}</Text>}
 
+              <label style={{ marginBottom: '-20px'}} htmlFor="name">Descrição</label>
               <Icon>
-                <FaUser size={24} aria-hidden="true" />
+                <TbFileDescription size={24} aria-hidden="true" />
                 <StyledInputUpdateUser
                   type="text"
                   placeholder="Descrição"
@@ -278,8 +279,9 @@ export default function TableProducts() {
               </Icon>
               {errors.description && <Text>{errors.description.message}</Text>}
 
+              <label style={{ marginBottom: '-20px'}} htmlFor="name">Preço</label>
               <Icon>
-                <FaUser size={24} aria-hidden="true" />
+                <IoPricetagsOutline size={24} aria-hidden="true" />
                 <StyledInputUpdateUser
                   type="number"
                   placeholder="Preço"
@@ -289,8 +291,9 @@ export default function TableProducts() {
               </Icon>
               {errors.price && <Text>{errors.price.message}</Text>}
 
+              <label style={{ marginBottom: '-20px'}} htmlFor="name">Quantidade</label>
               <Icon>
-                <FaUser size={24} aria-hidden="true" />
+                <CiBoxes size={24} aria-hidden="true" />
                 <StyledInputUpdateUser
                   type="number"
                   placeholder="Quantidade em estoque"
@@ -300,8 +303,9 @@ export default function TableProducts() {
               </Icon>
               {errors.quantity_in_stock && <Text>{errors.quantity_in_stock.message}</Text>}
 
+              <label style={{ marginBottom: '-20px'}} htmlFor="name">Lote</label>
               <Icon>
-                <FaUser size={24} aria-hidden="true" />
+                <MdLabel size={24} aria-hidden="true" />
                 <StyledInputUpdateUser
                   type="text"
                   placeholder="Lote"
@@ -311,21 +315,27 @@ export default function TableProducts() {
               </Icon>
               {errors.batch && <Text>{errors.batch.message}</Text>}
 
-              <div className="flex justify-end mt-4">
-                <Button
-                  onClick={handleCloseEdit}
-                  variant="outlined"
-                  color="inherit"
-                  sx={{ marginRight: 2 }}
-                >
-                  Cancelar
-                </Button>
-                <DefaultButton
-                  type="submit"
-                >
-                  {loading ? <CircularProgress size={24} /> : "Salvar"}
-                </DefaultButton>
-              </div>
+              <Button
+              onClick={handleCloseEdit}
+              variant="outlined"
+              color="inherit"
+            >
+              Cancelar
+            </Button>
+            
+            <DefaultButton
+              type="submit"
+              aria-label="Salvar"
+              disabled={loading}
+            >
+              {loading ? (
+                <Box sx={{ display: "flex" }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                "Salvar"
+              )}
+            </DefaultButton>
             </Form>
           </Box>
         </Modal>
