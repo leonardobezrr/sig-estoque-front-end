@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MdDeleteOutline, MdEdit, MdLabel } from "react-icons/md";
-import { deleteProduct, fetchAllProductsData, fetchAllProductsByIdData, UpdateProduct } from "./api/index";
+import { fetchAllSuppliersData } from "./api/index";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -19,13 +19,12 @@ import { TbFileDescription } from "react-icons/tb";
 import { IoPricetagsOutline } from "react-icons/io5";
 import { CiBoxes } from "react-icons/ci";
 
-export interface Product {
+export interface Supplier {
   id: string;
-  name: string;
-  description: string;
-  price: number;
-  quantity_in_stock: number;
-  batch: string;
+  social_name: string,
+  company_name: string,
+  phone_number: string,
+  cnpj: string
 }
 
 const modalStyle = {
@@ -38,109 +37,108 @@ const modalStyle = {
   p: 4,
 };
 
-interface ProductData {
+interface SupplierData {
   id: string;
-  name: string;
-  description: string;
-  price: number;
-  quantity_in_stock: number;
-  batch: string;
+  social_name: string,
+  company_name: string,
+  phone_number: string,
+  cnpj: string
 }
 
-export default function TableProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
-  const [productData, setProductData] = useState<ProductData | null>(null);
-  const [loading, setLoading] = useState(false);
+export default function TableSuppliers() {
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  // const [openDelete, setOpenDelete] = useState(false);
+  // const [openEdit, setOpenEdit] = useState(false);
+  // const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  // const [productData, setProductData] = useState<ProductData | null>(null);
+  // const [loading, setLoading] = useState(false);
 
-  const fetchAllProducts = async () => {
+  const fetchAllSuppliers = async () => {
     try {
-      const response = await fetchAllProductsData();
-      setProducts(response.product);
+      const response = await fetchAllSuppliersData();
+      setSuppliers(response.supplier);
     } catch (error) {
       console.log("Erro na requisição", error);
     }
   };
 
   useEffect(() => {
-    fetchAllProducts();
+    fetchAllSuppliers();
   }, []);
 
-  const handleDeleteProduct = async () => {
-    if (selectedProductId) {
-      try {
-        await deleteProduct(selectedProductId);
-        fetchAllProducts();
-        handleClose();
-      } catch (error) {
-        console.log("Erro na requisição", error);
-      }
-    }
-  };
+  // const handleDeleteProduct = async () => {
+  //   if (selectedProductId) {
+  //     try {
+  //       await deleteProduct(selectedProductId);
+  //       fetchAllProducts();
+  //       handleClose();
+  //     } catch (error) {
+  //       console.log("Erro na requisição", error);
+  //     }
+  //   }
+  // };
 
-  const handleOpenDelete = (id: string) => {
-    setSelectedProductId(id);
-    setOpenDelete(true);
-  };
+  // const handleOpenDelete = (id: string) => {
+  //   setSelectedProductId(id);
+  //   setOpenDelete(true);
+  // };
 
-  const handleClose = () => {
-    setOpenDelete(false);
-    setSelectedProductId(null);
-  };
+  // const handleClose = () => {
+  //   setOpenDelete(false);
+  //   setSelectedProductId(null);
+  // };
 
-  const handleOpenEdit = async (id: string) => {
-    setSelectedProductId(id);
-    try {
-      const response = await fetchAllProductsByIdData(id);
-      setProductData(response.product);
-      setOpenEdit(true);
-    } catch (error) {
-      console.error("Erro ao abrir modal de edição:", error);
-    }
-  };
+  // const handleOpenEdit = async (id: string) => {
+  //   setSelectedProductId(id);
+  //   try {
+  //     const response = await fetchAllProductsByIdData(id);
+  //     setProductData(response.product);
+  //     setOpenEdit(true);
+  //   } catch (error) {
+  //     console.error("Erro ao abrir modal de edição:", error);
+  //   }
+  // };
 
-  const handleCloseEdit = () => {
-    setOpenEdit(false);
-    setSelectedProductId(null);
-    setProductData(null);
-  };
+  // const handleCloseEdit = () => {
+  //   setOpenEdit(false);
+  //   setSelectedProductId(null);
+  //   setProductData(null);
+  // };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<ProductData>();
+  } = useForm<SupplierData>();
 
-  const onSubmit: SubmitHandler<ProductData> = async (data) => {
-    setLoading(true);
-    try {
-      const payload = {
-        ...data,
-        price: Number(data.price),
-        quantity_in_stock: Number(data.quantity_in_stock),
-      };
-      if (selectedProductId && productData) {
-        await UpdateProduct(productData.id, payload);
-        fetchAllProducts();
-        handleCloseEdit();
-      } else {
-        console.error("ID inválido ou dados do produto ausentes");
-      }
-    } catch (error) {
-      console.error("Erro ao editar o produto:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const onSubmit: SubmitHandler<SupplierData> = async (data) => {
+  //   setLoading(true);
+  //   try {
+  //     const payload = {
+  //       ...data,
+  //       price: Number(data.price),
+  //       quantity_in_stock: Number(data.quantity_in_stock),
+  //     };
+  //     if (selectedProductId && productData) {
+  //       await UpdateProduct(productData.id, payload);
+  //       fetchAllProducts();
+  //       handleCloseEdit();
+  //     } else {
+  //       console.error("ID inválido ou dados do produto ausentes");
+  //     }
+  //   } catch (error) {
+  //     console.error("Erro ao editar o produto:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (productData) {
-      reset(productData);
-    }
-  }, [productData, reset]);
+  // useEffect(() => {
+  //   if (productData) {
+  //     reset(productData);
+  //   }
+  // }, [productData, reset]);
 
   return (
     <div
@@ -156,50 +154,45 @@ export default function TableProducts() {
         {/* head */}
         <thead>
           <tr>
-            <th className="text-center">Nome do produto</th>
-            <th className="text-center">Descrição</th>
-            <th className="text-center">Preço</th>
-            <th className="text-center">Quantidade em estoque</th>
-            <th className="text-center">Lote</th>
+            <th className="text-center">Nome social</th>
+            <th className="text-center">Nome da empresa</th>
+            <th className="text-center">Número de telefone</th>
+            <th className="text-center">CNPJ</th>
             <th className="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {products?.map((product) => (
-            <tr key={product.id}>
+          {suppliers?.map((supplier) => (
+            <tr key={supplier.id}>
               <td className="flex justify-center">
                 <div className="flex text-center gap-3">
                   <div className="flex items-center">
-                    <div className="font-bold w-10 flex justify-center">{product.name}</div>
+                    <div className="font-bold w-10 flex justify-center">{supplier.social_name}</div>
                   </div>
                 </div>
               </td>
               <td className="text-center">
-                {product.description}
+                {supplier.company_name}
                 <br />
               </td>
               <td className="text-center">
-                {product.price}
+                {supplier.phone_number}
                 <br />
               </td>
               <td className="text-center">
-                {product.quantity_in_stock}
-                <br />
-              </td>
-              <td className="text-center">
-                {product.batch}
+                {supplier.cnpj}
                 <br />
               </td>
               <td className="text-center">
                 <div className="flex justify-center space-x-2">
                   <button
                     className="btn btn-ghost btn-xs"
-                    onClick={() => handleOpenEdit(product.id)}
+                    onClick={() => handleOpenEdit(supplier.id)}
                   >
                     <MdEdit size={17} />
                   </button>
                   <button
-                    onClick={() => handleOpenDelete(product.id)}
+                    onClick={() => handleOpenDelete(supplier.id)}
                     className="btn btn-ghost btn-xs"
                   >
                     <MdDeleteOutline size={17} color="red" />
@@ -211,7 +204,7 @@ export default function TableProducts() {
         </tbody>
       </table>
 
-      <Modal
+      {/* <Modal
         open={openDelete}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -242,9 +235,9 @@ export default function TableProducts() {
             </Button>
           </div>
         </Box>
-      </Modal>
+      </Modal> */}
 
-      {productData && (
+      {/* {productData && (
         <Modal
           open={openEdit}
           onClose={handleCloseEdit}
@@ -340,7 +333,7 @@ export default function TableProducts() {
             </Form>
           </Box>
         </Modal>
-      )}
+      )} */}
     </div>
   );
 }
