@@ -12,7 +12,7 @@ import {
   Text,
 } from "@/styles/pages/manager";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CircularProgress, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
+import { CircularProgress, MenuItem, FormControl } from "@mui/material";
 import { useModal } from "./modal-context";
 import { createPurchase, fetchSuppliersData, fetchProductsData } from "./api";
 import { IoPricetagOutline } from "react-icons/io5";
@@ -73,6 +73,11 @@ export default function CreatePurchaseModal() {
 
   const watchedItems = watch("items");
 
+  React.useEffect(() => {
+    getSuppliersData();
+    getProductsData();
+  }, []);
+
   async function getSuppliersData() {
     try {
       const response = await fetchSuppliersData();
@@ -91,10 +96,24 @@ export default function CreatePurchaseModal() {
     }
   }
 
-  React.useEffect(() => {
-    getSuppliersData();
-    getProductsData();
-  }, []);
+  const handleProductChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const selectedProductIds = event.target.value as string[];
+
+    // Retrieve current items from form state
+    const currentItems = watch("items");
+
+    // Map selected product IDs to form items, ensuring that `quantity` and `value` are included
+    const newItems = selectedProductIds.map((productId) => {
+      const existingItem = currentItems.find(item => item.productId === productId);
+      return {
+        productId,
+        quantity: existingItem?.quantity || 1,
+        value: productsData.find(product => product.id === productId)?.price || 0,
+      };
+    });
+
+    setValue("items", newItems);
+  };
 
   const onSubmit: SubmitHandler<CreatePurchase> = async (data) => {
     setLoading(true);
@@ -119,19 +138,6 @@ export default function CreatePurchaseModal() {
     }
   };
 
-  const handleProductChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const selectedProductIds = event.target.value as string[];
-
-    // Map selected products to the items field in the form
-    const newItems = selectedProductIds.map((productId) => ({
-      productId,
-      quantity: 1,
-      value: productsData.find(product => product.id === productId)?.price || 0,
-    }));
-
-    setValue("items", newItems);
-  };
-
   return (
     <Modal
       open={isOpen}
@@ -144,64 +150,71 @@ export default function CreatePurchaseModal() {
           Cadastrar Compra
         </Typography>
         <Form onSubmit={handleSubmit(onSubmit)}>
+          
           <StyledSelectContainer>
-            <InputLabel id="supplier-select-label">Fornecedor</InputLabel>
-            <StyledSelect
-              defaultValue=""
-              labelId="supplier-select-label"
-              id="supplier-select"
-              className="w-full text-white"
-              {...register("supplierId", {
-                required: "Fornecedor é obrigatório",
-              })}
-            >
-              <MenuItem className="text-white" value="" disabled>
-                Selecione o fornecedor
-              </MenuItem>
-              {suppliersData?.map((supplier) => (
-                <MenuItem key={supplier.id} className="text-white" value={supplier.id}>
-                  {supplier.social_name}
+            <label htmlFor="supplier">Fornecedor</label>
+            <FormControl fullWidth>
+              <StyledSelect
+                defaultValue=""
+                labelId="supplier-select-label"
+                id="supplier-select"
+                {...register("supplierId", {
+                  required: "Fornecedor é obrigatório",
+                })}
+              >
+                <MenuItem className="text-white" value="" disabled>
+                  Selecione o fornecedor
                 </MenuItem>
-              ))}
-            </StyledSelect>
+                {suppliersData?.map((supplier) => (
+                  <MenuItem key={supplier.id} className="text-white" value={supplier.id}>
+                    {supplier.social_name}
+                  </MenuItem>
+                ))}
+              </StyledSelect>
+            </FormControl>
             {errors.supplierId && <Text>{errors.supplierId.message}</Text>}
           </StyledSelectContainer>
 
-          <Icon>
-            <IoPricetagOutline size={24} aria-hidden="true" />
-            <StyledInput
-              type="text"
-              placeholder="Número da Nota Fiscal"
-              aria-label="Número da Nota Fiscal"
-              {...register("nf_number", {
-                required: "Número da Nota Fiscal é obrigatório",
-              })}
-            />
+          <StyledSelectContainer>
+            <label htmlFor="nf_number">Nota fiscal</label>
+            <Icon>
+              <IoPricetagOutline size={24} aria-hidden="true" />
+              <StyledInput
+                type="text"
+                placeholder="Número da Nota Fiscal"
+                aria-label="Número da Nota Fiscal"
+                {...register("nf_number", {
+                  required: "Número da Nota Fiscal é obrigatório",
+                })}
+              />
+            </Icon>
             {errors.nf_number && <Text>{errors.nf_number.message}</Text>}
-          </Icon>
+          </StyledSelectContainer>
 
-          <FormControl fullWidth>
-            <InputLabel id="product-select-label">Produtos</InputLabel>
-            <Select
-              labelId="product-select-label"
-              id="product-select"
-              multiple
-              value={watchedItems.map(item => item.productId)}
-              onChange={handleProductChange}
-              renderValue={(selected) =>
-                productsData
-                  .filter((product) => selected.includes(product.id))
-                  .map((product) => product.name)
-                  .join(", ")
-              }
-            >
-              {productsData?.map((product) => (
-                <MenuItem key={product.id} value={product.id}>
-                  {product.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <StyledSelectContainer>
+            <label htmlFor="product">Produtos</label>
+            <FormControl fullWidth>
+              <StyledSelect
+                labelId="product-select-label"
+                id="product-select"
+                multiple
+                value={watchedItems.map(item => item.productId)}
+                onChange={handleProductChange}
+                renderValue={(selected: string[]) =>
+                  productsData
+                    .filter((product) => selected.includes(product.id))
+                    .map((product) => product.name)
+                    .join(", ")
+                }
+              >
+                {productsData?.map((product) => (
+                  <MenuItem key={product.id} value={product.id}>
+                    {product.name}
+                  </MenuItem>
+                ))}
+              </StyledSelect>
+            </FormControl>
+          </StyledSelectContainer>
 
           <DefaultButton type="submit" aria-label="Cadastrar Compra" disabled={loading}>
             {loading ? (

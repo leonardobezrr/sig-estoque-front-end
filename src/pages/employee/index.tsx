@@ -19,7 +19,7 @@ const Employee: React.FC = () => {
         <div className="flex gap-4">
           <CreateProductButton onClick={openModal}>Cadastrar Produto</CreateProductButton>
           <CreateProductButton><Link href='/employee/purchases'>Compras</Link></CreateProductButton>
-          <CreateProductButton>Vendas</CreateProductButton>
+          <CreateProductButton><Link href='/employee/sale'>Vendas</Link></CreateProductButton>
           <CreateProductButton><Link href='employee/supplier'>Fornecedores</Link></CreateProductButton>
         </div>
       </AddProductButton>
