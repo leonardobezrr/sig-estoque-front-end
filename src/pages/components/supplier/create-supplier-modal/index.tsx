@@ -13,7 +13,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { CircularProgress } from "@mui/material";
 import { useModal } from "./modal-context";
 import { createSupplier } from "./api";
-import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { IoPricetagOutline } from "react-icons/io5";
 import { FaRegUser, FaRegBuilding, FaPhoneAlt   } from "react-icons/fa";
 
