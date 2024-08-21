@@ -1,12 +1,12 @@
 import React from "react";
-import TableProducts from "../components/employee/products-table";
+import TableProducts from "../../components/employee/products-table";
 import { AddProductButton, Container, CreateProductButton } from "@/styles/pages/employee";
-import EmployeeNavbar from "../components/employee/employee-navbar";
+import EmployeeNavbar from "../../components/employee/employee-navbar";
 import {
   useModal,
   ModalProvider,
-} from "../components/employee/create-product-modal/modal-context";
-import CreateProductModal from "../components/employee/create-product-modal/index";
+} from "../../context/employee/modal-context";
+import CreateProductModal from "../../components/employee/create-product-modal/index";
 import Link from "next/link";
 
 const Employee: React.FC = () => {
