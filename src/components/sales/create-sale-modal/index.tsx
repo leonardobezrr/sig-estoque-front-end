@@ -12,9 +12,17 @@ import {
   Text,
 } from "@/styles/pages/manager";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CircularProgress, MenuItem, Select, InputLabel, FormControl, SelectChangeEvent, Button } from "@mui/material";
-import { useModal } from "../../../context/purchases/modal-context";
-import { createPurchase, fetchSuppliersData, fetchProductsData } from "./api";
+import {
+  CircularProgress,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Button,
+  SelectChangeEvent,
+} from "@mui/material";
+import { useModal } from "../../../context/sale/modal-context";
+import { createSale, fetchSuppliersData, fetchProductsData } from "./api";
 import { IoPricetagOutline } from "react-icons/io5";
 import { AuthContext } from "@/src/context/AuthContext";
 
@@ -28,7 +36,7 @@ const style = {
   p: 4,
 };
 
-interface CreatePurchase {
+interface CreateSale {
   nf_number: string;
   supplierId: string;
   userId: string;
@@ -52,11 +60,11 @@ interface SupplierData {
   social_name: string;
 }
 
-export default function CreatePurchaseModal() {
+export default function CreateSaleModal() {
   const [loading, setLoading] = React.useState(false);
   const { isOpen, closeModal } = useModal();
-  const [suppliersData, setSuppliersData] = React.useState<SupplierData[]>([]);
   const [productsData, setProductsData] = React.useState<ProductsData[]>([]);
+  const [suppliersData, setSuppliersData] = React.useState<SupplierData[]>([]);
   const { user } = React.useContext(AuthContext);
 
   const {
@@ -65,11 +73,11 @@ export default function CreatePurchaseModal() {
     formState: { errors },
     setValue,
     watch,
-    reset
-  } = useForm<CreatePurchase>({
+    reset,
+  } = useForm<CreateSale>({
     defaultValues: {
       items: [],
-    }
+    },
   });
 
   const watchedItems = watch("items");
@@ -97,38 +105,38 @@ export default function CreatePurchaseModal() {
     getProductsData();
   }, []);
 
-  const onSubmit: SubmitHandler<CreatePurchase> = async (data) => {
+  const onSubmit: SubmitHandler<CreateSale> = async (data) => {
     setLoading(true);
     try {
-      const purchaseData = {
+      const saleData = {
         ...data,
         userId: user,
-        items: data.items.map(item => ({
+        items: data.items.map((item) => ({
           ...item,
           quantity: Number(item.quantity),
           value: Number(item.value),
         })),
       };
 
-      await createPurchase(purchaseData);
+      await createSale(saleData);
       closeModal();
-      window.location.href = "/employee/purchases";
+      window.location.href = "/employee/sale";
     } catch (error) {
-      console.error("Erro ao cadastrar a compra", error);
+      console.error("Erro ao cadastrar a venda", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleProductChange = (event: SelectChangeEvent<string[]>, child: React.ReactNode) => {
+  const handleProductChange = (event: SelectChangeEvent<string[]>) => {
     const selectedProductIds = event.target.value as string[];
-  
+
     const newItems = selectedProductIds.map((productId) => ({
       productId,
       quantity: 1,
-      value: productsData.find(product => product.id === productId)?.price || 0,
+      value: productsData.find((product) => product.id === productId)?.price || 0,
     }));
-  
+
     setValue("items", newItems);
   };
 
@@ -146,17 +154,17 @@ export default function CreatePurchaseModal() {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Cadastrar Compra
+          Cadastrar Venda
         </Typography>
         <Form onSubmit={handleSubmit(onSubmit)}>
-        <StyledSelectContainer>
+          <StyledSelectContainer>
             <StyledSelect
               defaultValue="none"
               labelId="supplier-select-label"
               id="supplier-select"
               label="Fornecedor"
               className="text-white text-center"
-              style={{ width: '328px'}}
+              style={{ width: "328px" }}
               {...register("supplierId", {
                 required: "Fornecedor é obrigatório",
               })}
@@ -165,14 +173,17 @@ export default function CreatePurchaseModal() {
                 Selecione o fornecedor
               </MenuItem>
               {suppliersData?.map((supplier) => (
-                <MenuItem key={supplier.id} className="text-white" value={supplier.id}>
+                <MenuItem
+                  key={supplier.id}
+                  className="text-white"
+                  value={supplier.id}
+                >
                   {supplier.social_name}
                 </MenuItem>
               ))}
             </StyledSelect>
             {errors.supplierId && <Text>{errors.supplierId.message}</Text>}
           </StyledSelectContainer>
-
           <Icon>
             <IoPricetagOutline size={24} aria-hidden="true" />
             <StyledInput
@@ -189,10 +200,12 @@ export default function CreatePurchaseModal() {
           <FormControl fullWidth>
             <InputLabel id="product-select-label">Produtos</InputLabel>
             <Select
+              defaultValue={[]}
               labelId="product-select-label"
               id="product-select"
+              style={{ color: "white" }}
               multiple
-              value={watchedItems.map(item => item.productId)}
+              value={watchedItems.map((item) => item.productId)}
               onChange={handleProductChange}
               renderValue={(selected) =>
                 productsData
@@ -201,6 +214,9 @@ export default function CreatePurchaseModal() {
                   .join(", ")
               }
             >
+              <MenuItem className="text-white" value="none" disabled>
+                Selecione o(os) produto (os)
+              </MenuItem>
               {productsData?.map((product) => (
                 <MenuItem key={product.id} value={product.id}>
                   {product.name}
@@ -209,21 +225,21 @@ export default function CreatePurchaseModal() {
             </Select>
           </FormControl>
 
-          <Button
-              onClick={handleClose}
-              variant="outlined"
-              color="inherit"
-            >
-              Cancelar
+          <Button onClick={handleClose} variant="outlined" color="inherit">
+            Cancelar
           </Button>
 
-          <DefaultButton type="submit" aria-label="Cadastrar Compra" disabled={loading}>
+          <DefaultButton
+            type="submit"
+            aria-label="Cadastrar Venda"
+            disabled={loading}
+          >
             {loading ? (
               <Box sx={{ display: "flex" }}>
                 <CircularProgress />
               </Box>
             ) : (
-              "Cadastrar Compra"
+              "Cadastrar Venda"
             )}
           </DefaultButton>
         </Form>

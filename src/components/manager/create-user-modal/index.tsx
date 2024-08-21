@@ -14,11 +14,10 @@ import {
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FaUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { createUser } from "../manager-table/api/index";
-import { useNavigate } from "react-router-dom";
 import { useModal } from "../../../context/manager/modal-context";
 
 const style = {
@@ -47,10 +46,16 @@ export default function CreateUserModal() {
     handleSubmit,
     formState: { errors },
     setValue,
+    reset
   } = useForm<CreateUser>();
 
   const handleChange = (event: SelectChangeEvent<unknown>) => {
     setValue("type", event.target.value as string);
+  };
+
+  const handleClose = () => {
+    closeModal();
+    reset();
   };
 
   const onSubmit: SubmitHandler<CreateUser> = async (data) => {
@@ -85,7 +90,8 @@ export default function CreateUserModal() {
               labelId="demo-simple-select-standard-label"
               id="demo-simple-select-standard"
               label="Tipo de Usuário"
-              className="w-full text-white"
+              className="text-white text-center"
+              style={{ width: '328px'}}
               {...register("type", {
                 required: "Tipo de usuário é obrigatório",
               })}
@@ -132,6 +138,15 @@ export default function CreateUserModal() {
               {...register("password", { required: "Senha é obrigatória" })}
             />
           </Icon>
+
+          <Button
+              onClick={handleClose}
+              variant="outlined"
+              color="inherit"
+            >
+              Cancelar
+          </Button>
+
           {errors.password && <Text>{errors.password.message}</Text>}
           <DefaultButton type="submit" aria-label="Login" disabled={loading}>
             {loading ? (
