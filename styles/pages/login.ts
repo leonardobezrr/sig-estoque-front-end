@@ -66,9 +66,10 @@ export const StyledInput = styled.input`
   border: none;
   border-radius: 0.2rem;
   outline: none;
+  border: 1px solid gray;
 
   &:focus {
-    border: 1.5px solid #522d80;
+    border: 1px solid #522d80;
   }
 `;
 

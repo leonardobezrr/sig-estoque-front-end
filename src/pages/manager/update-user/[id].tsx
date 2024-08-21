@@ -1,8 +1,8 @@
 import { Container, StyledInputUpdateUser } from "@/styles/pages/manager";
-import ManagerNavbar from "../../components/manager/manager-navbar";
+import ManagerNavbar from "../../../components/manager/manager-navbar";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { fetchUserData, updateEmployeeUser, updateManagerUser } from "./api";
+import { fetchUserData, updateEmployeeUser, updateManagerUser } from "../../../api/manager";
 import { DefaultButton, Form, Icon, Text } from "@/styles/pages/manager";
 import { Box, CircularProgress } from "@mui/material";
 import { FaUser } from "react-icons/fa";
