@@ -29,6 +29,7 @@ export const StyledInput = styled.input`
   border: none;
   border-radius: 0.2rem;
   outline: none;
+  border: 1px solid gray;
 
   &:focus {
     border: 1.5px solid #522d80;
@@ -104,5 +105,4 @@ export const StyledSelectContainer = styled.div`
   width: 20rem;
   padding: 0.5rem;
   border-radius: 0.2rem;
-  border: none;
 `;

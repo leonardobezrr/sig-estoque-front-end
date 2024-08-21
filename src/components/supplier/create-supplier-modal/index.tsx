@@ -10,7 +10,7 @@ import {
   Text,
 } from "@/styles/pages/manager";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useModal } from "../../../context/supplier/modal-context";
 import { createSupplier } from "./api";
 import { IoPricetagOutline } from "react-icons/io5";
@@ -41,6 +41,7 @@ export default function CreateSupplierModal() {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm<CreateSupplier>();
 
   
@@ -56,6 +57,11 @@ export default function CreateSupplierModal() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleClose = () => {
+    closeModal();
+    reset();
   };
 
   return (
@@ -111,6 +117,14 @@ export default function CreateSupplierModal() {
             />
           </Icon>
           {errors.cnpj && <Text>{errors.cnpj.message}</Text>}
+
+          <Button
+              onClick={handleClose}
+              variant="outlined"
+              color="inherit"
+            >
+              Cancelar
+          </Button>
 
           <DefaultButton type="submit" aria-label="Login" disabled={loading}>
             {loading ? (

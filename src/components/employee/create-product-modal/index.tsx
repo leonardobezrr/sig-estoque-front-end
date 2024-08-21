@@ -7,14 +7,17 @@ import {
   Form,
   Icon,
   StyledInput,
+  StyledSelect,
+  StyledSelectContainer,
   Text,
 } from "@/styles/pages/manager";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress, InputLabel, MenuItem } from "@mui/material";
 import { CreateProduct } from "../products-table/api/index"
 import { useModal } from "../../../context/employee/modal-context";
 import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { IoPricetagOutline } from "react-icons/io5";
+import fetchSuppliersData from "./api";
 
 const style = {
   position: "absolute" as const,
@@ -29,20 +32,36 @@ const style = {
 interface CreateProduct {
   name: string;
   description: string;
+  supplierId: string;
   price: number;
   quantity_in_stock: number;
+}
+
+interface SupplierData {
+  id: string;
+  social_name: string;
 }
 
 export default function CreateProductModal() {
   const [loading, setLoading] = React.useState(false);
   const { isOpen, closeModal } = useModal();
+  const [suppliersData, setSuppliersData] = React.useState<SupplierData[]>([]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm<CreateProduct>();
 
+  async function getSuppliersData() {
+    try {
+      const response = await fetchSuppliersData();
+      setSuppliersData(response.supplier);
+    } catch (error) {
+      console.log("Erro ao buscar fornecedores", error);
+    }
+  }
   
   const onSubmit: SubmitHandler<CreateProduct> = async (data) => {
     setLoading(true);
@@ -64,6 +83,15 @@ export default function CreateProductModal() {
     }
   };
 
+  const handleClose = () => {
+    closeModal();
+    reset();
+  };
+
+  React.useEffect(() => {
+    getSuppliersData();
+  }, []);
+
   return (
     <Modal
       open={isOpen}
@@ -76,6 +104,30 @@ export default function CreateProductModal() {
           Adicionar Produto
         </Typography>
         <Form onSubmit={handleSubmit(onSubmit)}>
+        <StyledSelectContainer>
+            <StyledSelect
+              defaultValue="none"
+              labelId="supplier-select-label"
+              id="supplier-select"
+              label="Fornecedor"
+              className="text-white text-center"
+              style={{ width: '328px'}}
+              {...register("supplierId", {
+                required: "Fornecedor é obrigatório",
+              })}
+            >
+              <MenuItem className="text-white" value="none" disabled>
+                Selecione o fornecedor
+              </MenuItem>
+              {suppliersData?.map((supplier) => (
+                <MenuItem key={supplier.id} className="text-white" value={supplier.id}>
+                  {supplier.social_name}
+                </MenuItem>
+              ))}
+            </StyledSelect>
+            {errors.supplierId && <Text>{errors.supplierId.message}</Text>}
+          </StyledSelectContainer>
+
           <Icon>
             <MdOutlineProductionQuantityLimits size={24} aria-hidden="true" />
             <StyledInput
@@ -117,6 +169,14 @@ export default function CreateProductModal() {
             />
           </Icon>
           {errors.quantity_in_stock && <Text>{errors.quantity_in_stock.message}</Text>}
+
+          <Button
+              onClick={handleClose}
+              variant="outlined"
+              color="inherit"
+            >
+              Cancelar
+          </Button>
 
           <DefaultButton type="submit" aria-label="Login" disabled={loading}>
             {loading ? (
