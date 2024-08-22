@@ -104,30 +104,6 @@ export default function CreateProductModal() {
           Adicionar Produto
         </Typography>
         <Form onSubmit={handleSubmit(onSubmit)}>
-        <StyledSelectContainer>
-            <StyledSelect
-              defaultValue="none"
-              labelId="supplier-select-label"
-              id="supplier-select"
-              label="Fornecedor"
-              className="text-white text-center"
-              style={{ width: '328px'}}
-              {...register("supplierId", {
-                required: "Fornecedor é obrigatório",
-              })}
-            >
-              <MenuItem className="text-white" value="none" disabled>
-                Selecione o fornecedor
-              </MenuItem>
-              {suppliersData?.map((supplier) => (
-                <MenuItem key={supplier.id} className="text-white" value={supplier.id}>
-                  {supplier.social_name}
-                </MenuItem>
-              ))}
-            </StyledSelect>
-            {errors.supplierId && <Text>{errors.supplierId.message}</Text>}
-          </StyledSelectContainer>
-
           <Icon>
             <MdOutlineProductionQuantityLimits size={24} aria-hidden="true" />
             <StyledInput

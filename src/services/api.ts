@@ -4,8 +4,8 @@ import { parseCookies, destroyCookie } from "nookies";
 const cookies = parseCookies();
 
 export const api = axios.create({
-  baseURL: "https://sig-estoque-back-end.onrender.com",
-  // baseURL: "http://localhost:3333/",
+  //baseURL: "https://sig-estoque-back-end.onrender.com",
+  baseURL: "http://localhost:3333/",
   headers: {
     Authorization: `Bearer ${cookies["ssAuth.token"]}`,
   },

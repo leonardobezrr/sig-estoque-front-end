@@ -120,7 +120,7 @@ export default function CreateSaleModal() {
 
       await createSale(saleData);
       closeModal();
-      window.location.href = "/employee/sale";
+      window.location.href = "/employee/sales";
     } catch (error) {
       console.error("Erro ao cadastrar a venda", error);
     } finally {
